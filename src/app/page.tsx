@@ -103,7 +103,7 @@ export default function Home() {
           </svg>
           <span className="text-gray-700 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>은솔</span>
           <span className="text-gray-600 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
-            {isPast ? '의 결혼한지...' : '의 결혼까지...'}
+            {isPast ? '의 결혼한지' : '의 결혼까지...'}
           </span>
         </div>
 

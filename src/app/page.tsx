@@ -13,6 +13,7 @@ export default function Home() {
     seconds: 0
   })
 
+  const [isPast, setIsPast] = useState(false)
   const [animate, setAnimate] = useState(false)
   const [showGuide, setShowGuide] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -31,11 +32,25 @@ export default function Home() {
       const difference = weddingDate.getTime() - now.getTime()
       
       if (difference > 0) {
+        // 아직 결혼식 전
+        setIsPast(false)
         setTimeLeft({
           days: Math.floor(difference / (1000 * 60 * 60 * 24)),
           hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
           minutes: Math.floor((difference / 1000 / 60) % 60),
           seconds: Math.floor((difference / 1000) % 60)
+        })
+        setAnimate(true)
+        setTimeout(() => setAnimate(false), 300)
+      } else {
+        // 결혼식이 지났음
+        setIsPast(true)
+        const elapsed = Math.abs(difference)
+        setTimeLeft({
+          days: Math.floor(elapsed / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((elapsed / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((elapsed / 1000 / 60) % 60),
+          seconds: Math.floor((elapsed / 1000) % 60)
         })
         setAnimate(true)
         setTimeout(() => setAnimate(false), 300)
@@ -87,7 +102,9 @@ export default function Home() {
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
           <span className="text-gray-700 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>은솔</span>
-          <span className="text-gray-600 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>의 결혼까지...</span>
+          <span className="text-gray-600 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
+            {isPast ? '의 결혼한지...' : '의 결혼까지...'}
+          </span>
         </div>
 
         <div className="grid grid-cols-4 gap-4 md:gap-8 max-w-md md:max-w-2xl mx-auto">

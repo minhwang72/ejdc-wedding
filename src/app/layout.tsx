@@ -12,7 +12,7 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Min ♥ EunSol\'s Wedding',
+  title: '도찬 ♥ 은진\'s Wedding',
   description: '2026년 4월 11일 토요일, 정동제일교회에서 현도찬과 김은진의 결혼식이 있습니다. 두 사람의 새로운 시작을 축복해주시면 감사하겠습니다.',
   keywords: ["현도찬", "김은진", "결혼식", "청첩장", "웨딩", "wedding", "invitation", "정동제일교회"],
   icons: {

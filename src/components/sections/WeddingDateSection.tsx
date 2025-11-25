@@ -17,8 +17,8 @@ export default function WeddingDateSection() {
     return new Date(year, month - 1, 1).getDay()
   }
 
-  const year = 2025
-  const month = 11
+  const year = 2026
+  const month = 4
   const daysInMonth = getDaysInMonth(year, month)
   const firstDayOfMonth = getFirstDayOfMonth(year, month)
   const weekDays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
@@ -35,7 +35,7 @@ export default function WeddingDateSection() {
   for (let day = 1; day <= daysInMonth; day++) {
     calendarDays.push({
       day,
-      isWeddingDay: day === 8 // 11월 8일이 결혼식 날
+      isWeddingDay: day === 11 // 04월 11일이 결혼식 날
     })
   }
 
@@ -124,7 +124,7 @@ export default function WeddingDateSection() {
           </div>
           
           <div className="text-base md:text-lg font-semibold text-black tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
-            Saturday, November 8, 2025&nbsp;&nbsp;|&nbsp;&nbsp;PM 1:00
+            Saturday, April 11, 2026&nbsp;&nbsp;|&nbsp;&nbsp;PM 1:00
           </div>
         </div>
       </div>

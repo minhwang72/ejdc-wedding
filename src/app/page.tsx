@@ -25,7 +25,7 @@ export default function Home() {
     document.body.style.overflow = 'hidden'
     document.documentElement.style.overflow = 'hidden'
 
-    const weddingDate = new Date('2025-11-08T13:00:00+09:00')
+    const weddingDate = new Date('2026-04-11T13:00:00+09:00')
     
     const calculateTimeLeft = () => {
       const now = new Date()
@@ -93,7 +93,7 @@ export default function Home() {
       {/* ⏱️ 카운트다운 영역 */}
       <div className="text-center mb-8 md:mb-12">
         <div className="flex items-center justify-center gap-2 mb-6 md:mb-8">
-          <span className="text-gray-700 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>민</span>
+          <span className="text-gray-700 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>도찬</span>
           <svg 
             className="w-4 h-4 md:w-5 md:h-5 text-pink-300"
             viewBox="0 0 24 24"
@@ -101,7 +101,7 @@ export default function Home() {
           >
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
           </svg>
-          <span className="text-gray-700 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>은솔</span>
+          <span className="text-gray-700 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>은진</span>
           <span className="text-gray-600 text-base md:text-lg font-semibold tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
             {isPast ? '의 결혼한지' : '의 결혼까지...'}
           </span>
@@ -232,7 +232,7 @@ export default function Home() {
                 {/* 날짜와 시간 */}
                 <div className="text-center mb-2 md:mb-3">
                                   <p className="text-sm md:text-base lg:text-lg font-semibold tracking-wide text-gray-900" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
-                  2025. 11. 08. 1:00 PM
+                  2026. 04. 11. 1:00 PM
                 </p>
                 </div>
 

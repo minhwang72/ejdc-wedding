@@ -121,7 +121,7 @@ export default function CoverSection() {
               onClick={handleMinClick}
               style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}
             >
-              황민
+              현도찬
             </span>
             
             {/* 장식 SVG - 스크롤 기준 애니메이션 적용 */}
@@ -161,7 +161,7 @@ export default function CoverSection() {
               onClick={handleSolClick}
               style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}
             >
-              이은솔
+              김은진
             </span>
           </div>
         </div>

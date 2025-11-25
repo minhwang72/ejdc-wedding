@@ -8,7 +8,7 @@ export default function WeddingDateSection() {
   const calendarAnimation = useScrollAnimation({ threshold: 0.3, animationDelay: 400 })
   const dateInfoAnimation = useScrollAnimation({ threshold: 0.2, animationDelay: 600 })
 
-  // 2025년 11월 달력 생성
+  // 2026년 4월 달력 생성
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month, 0).getDate()
   }
@@ -120,7 +120,7 @@ export default function WeddingDateSection() {
           className={`space-y-3 md:space-y-4 transition-all duration-800 ${dateInfoAnimation.animationClass}`}
         >
           <div className="text-base md:text-lg font-semibold text-black tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
-            2025년 11월 8일 토요일&nbsp;&nbsp;|&nbsp;&nbsp;오후 1시
+            2026년 4월 11일 토요일&nbsp;&nbsp;|&nbsp;&nbsp;오후 1시
           </div>
           
           <div className="text-base md:text-lg font-semibold text-black tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>

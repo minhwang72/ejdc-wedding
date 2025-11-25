@@ -6,4 +6,4 @@ Allow: /uploads/
 Allow: /images/
 
 # 사이트맵 위치
-Sitemap: https://monsil.eungming.com/sitemap.xml
+Sitemap: https://ejdc.eungming.com/sitemap.xml

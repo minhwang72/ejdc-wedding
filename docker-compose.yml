@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "1108:1108"
+      - "1140:1140"
     environment:
       - NODE_ENV=production
     restart: always

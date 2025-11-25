@@ -3,7 +3,7 @@ import type { Gallery } from '@/types'
 
 export async function generateMetadata(): Promise<Metadata> {
   // 기본 이미지를 실제 존재하는 메인 이미지로 설정
-  let imageUrl = 'https://monsil.eungming.com/uploads/images/main_cover.jpg'
+  let imageUrl = 'https://ejdc.eungming.com/uploads/images/main_cover.jpg'
   
   try {
     // 캐시 무효화를 위한 타임스탬프 추가
@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
     // 서버 사이드에서는 내부 API 호출 사용 (SSL 인증서 문제 회피)
     const baseUrl = process.env.INTERNAL_API_URL || 
       (process.env.NODE_ENV === 'production' 
-        ? 'http://localhost:1108'  // Docker 내부에서는 HTTP 사용
+        ? 'http://localhost:1140'  // Docker 내부에서는 HTTP 사용
         : 'http://localhost:3000')  // 개발 환경
       
     console.log(`[DEBUG] Fetching gallery data from: ${baseUrl}/api/gallery`)
@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
       cache: 'no-store',
       next: { revalidate: 0 }, // ISR 캐시도 무효화
       headers: {
-        'User-Agent': 'MonsilBot/1.0 (Wedding Invitation Metadata Generator)',
+        'User-Agent': 'ejdcBot/1.0 (Wedding Invitation Metadata Generator)',
       }
     })
     
@@ -38,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
           // URL이 상대 경로인 경우 절대 경로로 변환하고 타임스탬프 추가
           imageUrl = mainImage.url.startsWith('http') 
             ? `${mainImage.url}?v=${timestamp}`
-            : `https://monsil.eungming.com${mainImage.url}?v=${timestamp}`
+            : `https://ejdc.eungming.com${mainImage.url}?v=${timestamp}`
           console.log(`[DEBUG] Final image URL:`, imageUrl)
         }
       }
@@ -53,19 +53,19 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "Min ♥ EunSol's Wedding",
-    description: "2025년 11월 8일 오후 1시, 정동제일교회에서 결혼식을 올립니다. 여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
-    keywords: ["결혼식", "청첩장", "wedding", "invitation", "황민", "이은솔", "정동제일교회"],
+    description: "2026년 4월 11일 오후 1시, 정동제일교회에서 결혼식을 올립니다. 여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
+    keywords: ["결혼식", "청첩장", "wedding", "invitation", "현도찬", "김은진", "정동제일교회"],
     openGraph: {
       title: "Min ♥ EunSol's Wedding",
-      description: "2025년 11월 8일 오후 1시\n정동제일교회에서 결혼식을 올립니다.\n여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
-      url: "https://monsil.eungming.com",
-      siteName: "황민 ♥ 이은솔 결혼식 청첩장",
+      description: "2026년 4월 11일 오후 1시\n정동제일교회에서 결혼식을 올립니다.\n여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
+      url: "https://ejdc.eungming.com",
+      siteName: "현도찬 ♥ 김은진 결혼식 청첩장",
       images: [
         {
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: "황민 ♥ 이은솔 결혼식 청첩장",
+          alt: "현도찬 ♥ 김은진 결혼식 청첩장",
         },
       ],
       locale: "ko_KR",
@@ -74,7 +74,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "Min ♥ EunSol's Wedding",
-      description: "2025년 11월 8일 오후 1시, 정동제일교회에서 결혼식을 올립니다. 여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
+      description: "2026년 4월 11일 오후 1시, 정동제일교회에서 결혼식을 올립니다. 여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
       images: [imageUrl],
     },
     icons: {
@@ -89,7 +89,7 @@ export async function generateMetadata(): Promise<Metadata> {
       'og:image:secure_url': imageUrl,
       'og:updated_time': new Date().toISOString(), // 메타데이터 갱신 시간
       // 카카오톡 전용 메타데이터
-      'al:web:url': 'https://monsil.eungming.com',
+      'al:web:url': 'https://ejdc.eungming.com',
       'al:web:should_fallback': 'true',
     }
   }

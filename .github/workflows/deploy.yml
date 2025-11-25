@@ -29,8 +29,8 @@ jobs:
         echo "SERVER_HOST=${{ secrets.SERVER_HOST }}" >> $GITHUB_ENV
         echo "SERVER_PORT=${{ secrets.SERVER_PORT }}" >> $GITHUB_ENV
         echo "SERVER_USER=${{ secrets.SERVER_USER }}" >> $GITHUB_ENV
-        echo "CONTAINER_NAME=wedding-website" >> $GITHUB_ENV
-        echo "PORT=1108" >> $GITHUB_ENV
+        echo "CONTAINER_NAME=ejdc-wedding" >> $GITHUB_ENV
+        echo "PORT=1140" >> $GITHUB_ENV
         echo "HOST=0.0.0.0" >> $GITHUB_ENV
         echo "NODE_ENV=production" >> $GITHUB_ENV
         echo "NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=${{ secrets.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID }}" >> $GITHUB_ENV
@@ -109,7 +109,7 @@ jobs:
         command_timeout: 10m
         script: |
           echo "📁 Preparing host directories..."
-          HOST_PUBLIC_DIR="/home/ubuntu/wedding-website/public"
+          HOST_PUBLIC_DIR="/home/ubuntu/ejdc-wedding/public"
           mkdir -p $HOST_PUBLIC_DIR/uploads/images
           
           # 권한 설정 (sudo 없이)

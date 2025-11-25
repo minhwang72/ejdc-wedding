@@ -293,11 +293,11 @@ export default function LocalPage() {
                   <div className="text-center">
                     <div className="flex justify-center items-center gap-4 mb-2">
                       <span className="text-2xl md:text-3xl font-extralight tracking-wide text-gray-800" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
-                        황민
+                        현도찬
                       </span>
                       <span className="text-lg text-gray-500">·</span>
                       <span className="text-2xl md:text-3xl font-extralight tracking-wide text-gray-800" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
-                        이은솔
+                        김은진
                       </span>
                     </div>
                     <p className="text-base text-gray-600 font-extralight tracking-wide" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
@@ -378,7 +378,7 @@ export default function LocalPage() {
                       </svg>
                       <div className="text-left">
                         <div className="text-sm text-gray-600" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>일시</div>
-                        <div className="text-base font-medium text-gray-800" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>2025년 11월 1일 (토) 오후 6시</div>
+                        <div className="text-base font-medium text-gray-800" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>2026년 4월 1일 (토) 오후 6시</div>
                       </div>
                     </div>
                   </div>

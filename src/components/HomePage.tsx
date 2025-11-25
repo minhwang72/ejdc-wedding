@@ -59,17 +59,17 @@ export default function HomePage() {
             // 상대 경로라면 절대 경로로 변환하고 타임스탬프 추가
             const imageUrl = mainImage.url.startsWith('http') 
               ? `${mainImage.url}?t=${timestamp}`
-              : `https://monsil.eungming.com${mainImage.url}?t=${timestamp}`
+              : `https://ejdc.eungming.com${mainImage.url}?t=${timestamp}`
             setMainImageUrl(imageUrl)
           } else {
             // 메인 이미지가 없으면 기본 이미지 사용
-            setMainImageUrl('https://monsil.eungming.com/images/cover-image.jpg')
+            setMainImageUrl('https://ejdc.eungming.com/images/cover-image.jpg')
           }
         }
       } catch (error) {
         console.error('Error fetching main image:', error)
         // 기본 이미지 URL 설정
-        setMainImageUrl('https://monsil.eungming.com/images/cover-image.jpg')
+        setMainImageUrl('https://ejdc.eungming.com/images/cover-image.jpg')
       }
     }
 
@@ -115,27 +115,27 @@ export default function HomePage() {
     try {
       if (window.Kakao && window.Kakao.isInitialized()) {
         // 최신 메인 이미지 URL 확보 (타임스탬프 포함)
-        const shareImageUrl = mainImageUrl || 'https://monsil.eungming.com/images/cover-image.jpg'
+        const shareImageUrl = mainImageUrl || 'https://ejdc.eungming.com/images/cover-image.jpg'
         
         console.log('카카오 공유 이미지 URL:', shareImageUrl)
         
         window.Kakao.Share.sendDefault({
           objectType: 'feed',
           content: {
-            title: '황민 ♥ 이은솔 결혼합니다',
-            description: '2025년 11월 8일 오후 1시\n정동제일교회에서 결혼식을 올립니다.\nWe invite you to our wedding.\n여러분의 축복으로 더 아름다운 날이 되길 바랍니다.',
+            title: '현도찬 ♥ 김은진 결혼합니다',
+            description: '2026년 4월 11일 오후 1시\n정동제일교회에서 결혼식을 올립니다.\nWe invite you to our wedding.\n여러분의 축복으로 더 아름다운 날이 되길 바랍니다.',
             imageUrl: shareImageUrl,
             link: {
-              mobileWebUrl: 'https://monsil.eungming.com',
-              webUrl: 'https://monsil.eungming.com',
+              mobileWebUrl: 'https://ejdc.eungming.com',
+              webUrl: 'https://ejdc.eungming.com',
             },
           },
           buttons: [
             {
               title: '청첩장 보기',
               link: {
-                mobileWebUrl: 'https://monsil.eungming.com',
-                webUrl: 'https://monsil.eungming.com',
+                mobileWebUrl: 'https://ejdc.eungming.com',
+                webUrl: 'https://ejdc.eungming.com',
               },
             },
           ],
@@ -160,13 +160,13 @@ export default function HomePage() {
   // 링크 복사
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText('https://monsil.eungming.com')
+      await navigator.clipboard.writeText('https://ejdc.eungming.com')
       showToastMessage('링크가 복사되었습니다', 'success')
     } catch (err) {
       console.error('링크 복사 실패:', err)
       // 폴백: 직접 선택하여 복사
       const textArea = document.createElement('textarea')
-      textArea.value = 'https://monsil.eungming.com'
+      textArea.value = 'https://ejdc.eungming.com'
       document.body.appendChild(textArea)
       textArea.select()
       document.execCommand('copy')

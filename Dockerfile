@@ -49,7 +49,7 @@ ENV NEXT_PUBLIC_KAKAO_JS_KEY=$NEXT_PUBLIC_KAKAO_JS_KEY
 
 # SSL and internal API configuration
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
-ENV INTERNAL_API_URL=http://127.0.0.1:1108
+ENV INTERNAL_API_URL=http://127.0.0.1:1140
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
@@ -70,9 +70,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 USER nextjs
 
-EXPOSE 1108
+EXPOSE 1140
 
-ENV PORT 1108
+ENV PORT 1140
 ENV HOSTNAME "0.0.0.0"
 
 CMD ["node", "server.js"] 

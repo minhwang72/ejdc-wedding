@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 
 const ALGORITHM = 'aes-256-cbc'
-const SECRET_KEY = crypto.createHash('sha256').update('monsil_wedding_secret_key').digest() // 32바이트 키
+const SECRET_KEY = crypto.createHash('sha256').update('ejdc_wedding_secret_key').digest() // 32바이트 키
 const IV_LENGTH = 16 // AES-256-CBC의 경우 16바이트
 
 export function encryptPassword(password: string): string {

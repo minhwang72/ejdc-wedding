@@ -1,7 +1,7 @@
 import crypto from 'crypto'
 
 // 환경변수에서 키를 가져오거나 기본값 사용
-const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'monsil-wedding-2024-secret-key-32'
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'ejdc-wedding-2024-secret-key-32'
 const ALGORITHM = 'aes-256-cbc'
 
 // 키를 32바이트로 맞춤

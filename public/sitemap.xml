@@ -2,25 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://monsil.eungming.com/</loc>
+    <loc>https://ejdc.eungming.com/</loc>
     <lastmod>2025-08-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://monsil.eungming.com/uploads/images/main_cover.jpg</image:loc>
-      <image:title>황민 ♥ 이은솔 결혼식 청첩장</image:title>
-      <image:caption>황민과 이은솔의 결혼식 청첩장</image:caption>
+      <image:loc>https://ejdc.eungming.com/uploads/images/main_cover.jpg</image:loc>
+      <image:title>현도찬 ♥ 김은진 결혼식 청첩장</image:title>
+      <image:caption>현도찬과 김은진의 결혼식 청첩장</image:caption>
     </image:image>
   </url>
   <url>
-    <loc>https://monsil.eungming.com/invitation</loc>
+    <loc>https://ejdc.eungming.com/invitation</loc>
     <lastmod>2025-08-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <image:image>
-      <image:loc>https://monsil.eungming.com/uploads/images/main_cover.jpg</image:loc>
-      <image:title>황민 ♥ 이은솔 결혼식 청첩장</image:title>
-      <image:caption>황민과 이은솔의 결혼식 청첩장</image:caption>
+      <image:loc>https://ejdc.eungming.com/uploads/images/main_cover.jpg</image:loc>
+      <image:title>현도찬 ♥ 김은진 결혼식 청첩장</image:title>
+      <image:caption>현도찬과 김은진의 결혼식 청첩장</image:caption>
     </image:image>
   </url>
 </urlset>

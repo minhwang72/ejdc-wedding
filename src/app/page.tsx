@@ -179,7 +179,7 @@ export default function Home() {
               <div className="flex justify-center items-center mt-6 md:mt-8 mb-4 md:mb-6">
                 <div className="w-full max-w-sm flex justify-between items-center px-6 md:px-8">
                   <span className="text-sm md:text-base lg:text-lg font-semibold tracking-wide text-black" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
-                    황민
+                    현도찬
                   </span>
                   
                   {/* 장식 SVG */}
@@ -211,7 +211,7 @@ export default function Home() {
                   </div>
                   
                   <span className="text-sm md:text-base lg:text-lg font-semibold tracking-wide text-black" style={{ fontFamily: 'MaruBuri, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
-                    이은솔
+                    김은진
                   </span>
                 </div>
               </div>
@@ -221,7 +221,7 @@ export default function Home() {
               {/* 중앙 이미지 */}
               <div className="flex-1 flex justify-center items-center mt-2 md:mt-4 px-6 md:px-8">
                 <img
-                  src="https://monsil.eungming.com/uploads/images/main_cover.jpg"
+                  src="https://ejdc.eungming.com/uploads/images/main_cover.jpg"
                   alt="Cover"
                   className="w-full h-full object-cover rounded-md"
                 />

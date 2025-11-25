@@ -1,17 +1,24 @@
-import mysql from 'mysql2/promise';
+import mysql from 'mysql2/promise'
 
-// 환경에 따라 데이터베이스 설정 선택
-const isLocal = process.env.NODE_ENV === 'development' || process.env.LOCAL_DB === 'true';
+// 환경 설정
+const isLocal = process.env.NODE_ENV === 'development' || process.env.LOCAL_DB === 'true'
+
+// 환경변수 우선 사용 (없을 경우 기존 기본값)
+const host = process.env.DB_HOST || (isLocal ? 'localhost' : '192.168.0.19')
+const port = process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306
+const user = process.env.DB_USER || (isLocal ? 'root' : 'min')
+const password = process.env.DB_PASSWORD || (isLocal ? '' : 'f8tgw3lshms!')
+const database = process.env.DB_NAME || 'ejdc_wedding'
 
 const pool = mysql.createPool({
-  host: isLocal ? 'localhost' : '192.168.0.19',
-  port: 3306,
-  user: isLocal ? 'root' : 'min',
-  password: isLocal ? '' : 'f8tgw3lshms!',
-  database: 'ejdc-wedding',
+  host,
+  port,
+  user,
+  password,
+  database,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
-});
+})
 
-export default pool; 
+export default pool

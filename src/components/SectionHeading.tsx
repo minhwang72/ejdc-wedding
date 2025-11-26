@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 
 type SectionHeadingProps = {
   kicker?: string
-  title: ReactNode
+  title?: ReactNode
   description?: ReactNode
   align?: 'left' | 'center'
   size?: 'sm' | 'md' | 'lg'
@@ -31,6 +31,8 @@ export default function SectionHeading({
   const wrapperClass = ['space-y-4', alignment, 'py-4', className].filter(Boolean).join(' ').trim()
   const descriptionWidthClass = descriptionWidth === 'narrow' ? 'max-w-xl' : 'max-w-2xl'
 
+  const hasTitle = Boolean(title)
+
   return (
     <div className={wrapperClass}>
       {kicker && (
@@ -38,12 +40,19 @@ export default function SectionHeading({
           <span>{kicker}</span>
         </p>
       )}
-      <h2 className={['section-title leading-[1.25]', 'py-1.5', sizeClass[size]].join(' ')}>
-        {title}
-      </h2>
+      {hasTitle && (
+        <h2 className={['section-title leading-[1.25]', 'py-1.5', sizeClass[size]].join(' ')}>
+          {title}
+        </h2>
+      )}
       {description && (
         <div
-          className={['section-description', 'py-1.5', descriptionAlignment, descriptionWidthClass]
+          className={[
+            'section-description',
+            descriptionAlignment,
+            descriptionWidthClass,
+            hasTitle ? 'py-1.5' : 'py-2'
+          ]
             .filter(Boolean)
             .join(' ')
             .trim()}

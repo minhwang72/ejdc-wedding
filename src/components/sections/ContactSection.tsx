@@ -183,7 +183,7 @@ export default function ContactSection() {
                 onClick={handleModalOpen}
                 className="w-full py-3 bg-gray-900 text-white rounded-lg font-heading tracking-[0.35em] text-xs md:text-sm uppercase"
               >
-                Send Regards
+                연락하기
               </button>
             </div>
           </div>

@@ -6,7 +6,6 @@ import { useScrollAnimation } from '@/hooks/useScrollAnimation'
 export default function CoverSection() {
   const [imageUrl, setImageUrl] = useState<string>('')
   const [isLoading, setIsLoading] = useState(true)
-  const nameRowAnimation = useScrollAnimation({ threshold: 0.3, animationDelay: 200 })
   const photoAnimation = useScrollAnimation({ threshold: 0.2, animationDelay: 400 })
   const heartAnimation = useScrollAnimation({ threshold: 0.1, animationDelay: 2000 })
 

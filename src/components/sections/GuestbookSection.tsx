@@ -26,8 +26,11 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
   const [showAll, setShowAll] = useState(false)
   const [isMobileViewport, setIsMobileViewport] = useState(false)
   const [keyboardOffset, setKeyboardOffset] = useState(0)
+  const [viewportHeight, setViewportHeight] = useState<number | null>(null)
+  const keyboardFocusTimeout = useRef<number | null>(null)
   const writeModalRef = useRef<HTMLDivElement>(null)
   const deleteModalRef = useRef<HTMLDivElement>(null)
+  const isAnyModalOpen = isModalOpen || deleteModalOpen
 
   // 스크롤 애니메이션 훅들
   const writeButtonAnimation = useScrollAnimation({ threshold: 0.3, animationDelay: 400 })
@@ -44,24 +47,57 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
   }, [])
 
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.visualViewport) return
+    if (typeof window === 'undefined') return
+
     const viewport = window.visualViewport
-    const updateOffset = () => {
+    if (!viewport || !isAnyModalOpen) {
+      setViewportHeight(null)
+      setKeyboardOffset(0)
+      return
+    }
+
+    const updateViewportMetrics = () => {
       const offset = window.innerHeight - viewport.height
       setKeyboardOffset(offset > 0 ? offset : 0)
+      setViewportHeight(viewport.height)
     }
-    if (isModalOpen || deleteModalOpen) {
-      updateOffset()
-      viewport.addEventListener('resize', updateOffset)
-      viewport.addEventListener('scroll', updateOffset)
-    } else {
-      setKeyboardOffset(0)
-    }
+
+    updateViewportMetrics()
+    viewport.addEventListener('resize', updateViewportMetrics)
+    viewport.addEventListener('scroll', updateViewportMetrics)
+
     return () => {
-      viewport.removeEventListener('resize', updateOffset)
-      viewport.removeEventListener('scroll', updateOffset)
+      viewport.removeEventListener('resize', updateViewportMetrics)
+      viewport.removeEventListener('scroll', updateViewportMetrics)
     }
-  }, [isModalOpen, deleteModalOpen])
+  }, [isAnyModalOpen])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!isAnyModalOpen) {
+      setKeyboardOffset(0)
+      setViewportHeight(null)
+      return
+    }
+
+    const previousOverflow = document.body.style.overflow
+    const previousPadding = document.body.style.paddingRight
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
+
+    document.body.style.overflow = 'hidden'
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.body.style.paddingRight = previousPadding
+      if (keyboardFocusTimeout.current) {
+        window.clearTimeout(keyboardFocusTimeout.current)
+        keyboardFocusTimeout.current = null
+      }
+    }
+  }, [isAnyModalOpen])
 
   const handleFieldFocus = useCallback(
     (
@@ -69,19 +105,36 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
       containerRef?: React.RefObject<HTMLDivElement | null>
     ) => {
       if (!isMobileViewport) return
-      requestAnimationFrame(() => {
+      if (keyboardFocusTimeout.current) {
+        window.clearTimeout(keyboardFocusTimeout.current)
+      }
+
+      keyboardFocusTimeout.current = window.setTimeout(() => {
         const container = containerRef?.current
+        const target = event.target as HTMLElement
+        const viewport = window.visualViewport
+        const availableHeight = viewport?.height ?? window.innerHeight
+        const rect = target.getBoundingClientRect()
+        const offsetBottom = rect.bottom
+        const offsetTop = rect.top
+        const safePadding = 56
+
         if (container) {
-          const target = event.target as HTMLElement
-          const offsetTop = target.offsetTop - 40
-          container.scrollTo({
-            top: offsetTop > 0 ? offsetTop : 0,
-            behavior: 'smooth'
-          })
+          if (offsetBottom > availableHeight - safePadding) {
+            container.scrollBy({
+              top: offsetBottom - (availableHeight - safePadding),
+              behavior: 'smooth'
+            })
+          } else if (offsetTop < safePadding) {
+            container.scrollBy({
+              top: offsetTop - safePadding,
+              behavior: 'smooth'
+            })
+          }
         } else {
-          event.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }
-      })
+      }, 80)
     },
     [isMobileViewport]
   )
@@ -400,12 +453,23 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
       {isModalOpen && (
         <div 
           className="fixed inset-0 flex items-start md:items-center justify-center z-[9999] p-4 animate-modal-fade-in overflow-y-auto"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', paddingBottom: keyboardOffset ? keyboardOffset + 24 : undefined }}
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            paddingBottom: keyboardOffset ? keyboardOffset + 24 : undefined,
+            minHeight: viewportHeight ? `${viewportHeight}px` : undefined,
+            paddingTop: isMobileViewport ? 32 : undefined,
+            alignItems: isMobileViewport ? 'flex-start' : undefined
+          }}
           onClick={handleBackgroundClick}
         >
           <div
             ref={writeModalRef}
-            className="bg-white rounded-lg p-4 md:p-6 w-full max-w-md font-sans max-h-[90vh] overflow-y-auto animate-modal-slide-up mt-6 md:mt-0"
+            className="bg-white rounded-lg p-4 md:p-6 w-full max-w-md font-sans max-h-[90vh] overflow-y-auto animate-modal-slide-up mt-6 md:mt-0 shadow-lg"
+            style={{
+              maxHeight: viewportHeight ? `${viewportHeight - 32}px` : undefined,
+              WebkitOverflowScrolling: 'touch',
+              overscrollBehavior: 'contain'
+            }}
           >
             <div className="mb-4">
               <h3 className="text-base md:text-lg font-medium text-gray-900">메시지 작성</h3>
@@ -486,13 +550,24 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
       {/* 삭제 모달 */}
       {deleteModalOpen && (
         <div 
-          className="fixed inset-0 flex items-center justify-center z-[9999] p-4 animate-modal-fade-in"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', paddingBottom: keyboardOffset ? keyboardOffset + 24 : undefined }}
+          className="fixed inset-0 flex items-start md:items-center justify-center z-[9999] p-4 animate-modal-fade-in overflow-y-auto"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            paddingBottom: keyboardOffset ? keyboardOffset + 24 : undefined,
+            minHeight: viewportHeight ? `${viewportHeight}px` : undefined,
+            paddingTop: isMobileViewport ? 32 : undefined,
+            alignItems: isMobileViewport ? 'flex-start' : undefined
+          }}
           onClick={handleDeleteBackgroundClick}
         >
           <div
             ref={deleteModalRef}
-            className="bg-white rounded-lg p-4 md:p-6 w-full max-w-sm font-sans animate-modal-slide-up"
+            className="bg-white rounded-lg p-4 md:p-6 w-full max-w-sm font-sans animate-modal-slide-up shadow-lg"
+            style={{
+              maxHeight: viewportHeight ? `${viewportHeight - 32}px` : undefined,
+              WebkitOverflowScrolling: 'touch',
+              overscrollBehavior: 'contain'
+            }}
           >
             <div className="mb-4">
               <h3 className="text-base md:text-lg font-medium text-gray-900 mb-2">메시지 삭제</h3>

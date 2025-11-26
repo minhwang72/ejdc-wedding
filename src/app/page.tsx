@@ -8,9 +8,6 @@ export async function generateMetadata(): Promise<Metadata> {
   let imageUrl = 'https://ejdc.eungming.com/uploads/images/main_cover.jpg'
   
   try {
-    // 캐시 무효화를 위한 타임스탬프 추가
-    const timestamp = Date.now()
-    
     // 서버 사이드에서는 내부 API 호출 사용 (SSL 인증서 문제 회피)
     const baseUrl = process.env.INTERNAL_API_URL || 
       (process.env.NODE_ENV === 'production' 
@@ -18,9 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
         : 'http://localhost:3000')  // 개발 환경
       
     console.log(`[DEBUG] Fetching gallery data from: ${baseUrl}/api/gallery`)
-    const response = await fetch(`${baseUrl}/api/gallery?t=${timestamp}`, {
-      cache: 'no-store',
-      next: { revalidate: 0 }, // ISR 캐시도 무효화
+    const response = await fetch(`${baseUrl}/api/gallery`, {
+      next: { revalidate: 60 * 60 }, // 1시간마다 최신 메타 이미지 갱신
       headers: {
         'User-Agent': 'ejdcBot/1.0 (Wedding Invitation Metadata Generator)',
       }

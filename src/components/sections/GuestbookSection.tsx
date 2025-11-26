@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import type { Guestbook } from '@/types'
 import SectionHeading from '@/components/SectionHeading'
 import { useScrollAnimation } from '@/hooks/useScrollAnimation'
@@ -25,6 +25,9 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
   const [isDeleting, setIsDeleting] = useState(false)
   const [showAll, setShowAll] = useState(false)
   const [isMobileViewport, setIsMobileViewport] = useState(false)
+  const [keyboardOffset, setKeyboardOffset] = useState(0)
+  const writeModalRef = useRef<HTMLDivElement>(null)
+  const deleteModalRef = useRef<HTMLDivElement>(null)
 
   // 스크롤 애니메이션 훅들
   const writeButtonAnimation = useScrollAnimation({ threshold: 0.3, animationDelay: 400 })
@@ -40,12 +43,48 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
     return () => window.removeEventListener('resize', updateViewport)
   }, [])
 
-  const handleFieldFocus = useCallback((event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    if (!isMobileViewport) return
-    requestAnimationFrame(() => {
-      event.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    })
-  }, [isMobileViewport])
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return
+    const viewport = window.visualViewport
+    const updateOffset = () => {
+      const offset = window.innerHeight - viewport.height
+      setKeyboardOffset(offset > 0 ? offset : 0)
+    }
+    if (isModalOpen || deleteModalOpen) {
+      updateOffset()
+      viewport.addEventListener('resize', updateOffset)
+      viewport.addEventListener('scroll', updateOffset)
+    } else {
+      setKeyboardOffset(0)
+    }
+    return () => {
+      viewport.removeEventListener('resize', updateOffset)
+      viewport.removeEventListener('scroll', updateOffset)
+    }
+  }, [isModalOpen, deleteModalOpen])
+
+  const handleFieldFocus = useCallback(
+    (
+      event: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+      containerRef?: React.RefObject<HTMLDivElement | null>
+    ) => {
+      if (!isMobileViewport) return
+      requestAnimationFrame(() => {
+        const container = containerRef?.current
+        if (container) {
+          const target = event.target as HTMLElement
+          const offsetTop = target.offsetTop - 40
+          container.scrollTo({
+            top: offsetTop > 0 ? offsetTop : 0,
+            behavior: 'smooth'
+          })
+        } else {
+          event.target.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }
+      })
+    },
+    [isMobileViewport]
+  )
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type })
@@ -361,10 +400,13 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
       {isModalOpen && (
         <div 
           className="fixed inset-0 flex items-start md:items-center justify-center z-[9999] p-4 animate-modal-fade-in overflow-y-auto"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', paddingBottom: keyboardOffset ? keyboardOffset + 24 : undefined }}
           onClick={handleBackgroundClick}
         >
-          <div className="bg-white rounded-lg p-4 md:p-6 w-full max-w-md font-sans max-h-[90vh] overflow-y-auto animate-modal-slide-up mt-6 md:mt-0">
+          <div
+            ref={writeModalRef}
+            className="bg-white rounded-lg p-4 md:p-6 w-full max-w-md font-sans max-h-[90vh] overflow-y-auto animate-modal-slide-up mt-6 md:mt-0"
+          >
             <div className="mb-4">
               <h3 className="text-base md:text-lg font-medium text-gray-900">메시지 작성</h3>
             </div>
@@ -377,7 +419,7 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
                   type="text"
                   value={formData.name}
                   onChange={handleInputChange}
-                  onFocus={handleFieldFocus}
+                  onFocus={(event) => handleFieldFocus(event, writeModalRef)}
                   maxLength={10}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent text-sm md:text-base placeholder-gray-400"
                   placeholder="이름을 입력해주세요 (최대 10글자)"
@@ -391,7 +433,7 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
                   name="content"
                   value={formData.content}
                   onChange={handleInputChange}
-                  onFocus={handleFieldFocus}
+                  onFocus={(event) => handleFieldFocus(event, writeModalRef)}
                   rows={4}
                   maxLength={200}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent resize-none text-sm md:text-base placeholder-gray-400"
@@ -410,7 +452,7 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
                   type="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  onFocus={handleFieldFocus}
+                  onFocus={(event) => handleFieldFocus(event, writeModalRef)}
                   maxLength={12}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent text-sm md:text-base placeholder-gray-400"
                   placeholder="비밀번호를 입력해주세요 (4~12자리)"
@@ -445,10 +487,13 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
       {deleteModalOpen && (
         <div 
           className="fixed inset-0 flex items-center justify-center z-[9999] p-4 animate-modal-fade-in"
-          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', paddingBottom: keyboardOffset ? keyboardOffset + 24 : undefined }}
           onClick={handleDeleteBackgroundClick}
         >
-          <div className="bg-white rounded-lg p-4 md:p-6 w-full max-w-sm font-sans animate-modal-slide-up">
+          <div
+            ref={deleteModalRef}
+            className="bg-white rounded-lg p-4 md:p-6 w-full max-w-sm font-sans animate-modal-slide-up"
+          >
             <div className="mb-4">
               <h3 className="text-base md:text-lg font-medium text-gray-900 mb-2">메시지 삭제</h3>
               <p className="text-sm text-gray-600">삭제하려면 비밀번호를 입력해주세요.</p>
@@ -459,7 +504,7 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
                 type="password"
                 value={deletePassword}
                 onChange={(e) => setDeletePassword(e.target.value)}
-                onFocus={handleFieldFocus}
+                onFocus={(event) => handleFieldFocus(event, deleteModalRef)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-transparent text-sm md:text-base placeholder-gray-400"
                 placeholder="비밀번호 입력"
                

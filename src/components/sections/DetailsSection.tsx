@@ -89,10 +89,10 @@ export default function LocationSection() {
               className="flex-1 bg-white text-black border border-gray-200 py-3 px-2 md:px-4 rounded-lg transition-colors text-xs md:text-sm font-medium flex items-center justify-center gap-1 md:gap-2 min-h-[48px] hover:bg-gray-50"
             >
               <svg width="18" height="14" viewBox="0 0 21 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[21px] md:h-[16px] flex-shrink-0">
-                <path d="M6.09879 0C2.86879 0 0.258789 2.61 0.258789 5.84C0.258789 6.18 0.298789 6.53 0.368789 6.89C0.558789 7.83 0.948789 8.71 1.49879 9.49L6.08879 16L8.73879 12.24L10.6788 9.49C11.2288 8.71 11.6188 7.83 11.8088 6.89C11.8788 6.53 11.9188 6.18 11.9188 5.84C11.9188 2.62 9.30879 0 6.07879 0L6.09879 0ZM5.35879 5.73V7.9H4.02879V3.78H5.35879L6.83879 5.95V3.78H8.16879V7.89H6.83879L5.35879 5.72V5.73Z" fill="#222222"/>
-                <path d="M8.16832 3.77979V7.88978H6.83832L5.35832 5.72979V7.88978H4.02832V3.77979H5.35832L6.83832 5.94978V3.77979H8.16832Z" fill="#222222"/>
+                <path d="M6.09879 0C2.86879 0 0.258789 2.61 0.258789 5.84C0.258789 6.18 0.298789 6.53 0.368789 6.89C0.558789 7.83 0.948789 8.71 1.49879 9.49L6.08879 16L8.73879 12.24L10.6788 9.49C11.2288 8.71 11.6188 7.83 11.8088 6.89C11.8788 6.53 11.9188 6.18 11.9188 5.84C11.9188 2.62 9.30879 0 6.07879 0L6.09879 0ZM5.35879 5.73V7.9H4.02879V3.78H5.35879L6.83879 5.95V3.78H8.16879V7.89H6.83879L5.35879 5.72V5.73Z" fill="#04C75A"/>
+                <path d="M8.16832 3.77979V7.88978H6.83832L5.35832 5.72979V7.88978H4.02832V3.77979H5.35832L6.83832 5.94978V3.77979H8.16832Z" fill="#04C75A"/>
                 <path d="M8.16832 3.77979V7.88978H6.83832L5.35832 5.72979V7.88978H4.02832V3.77979H5.35832L6.83832 5.94978V3.77979H8.16832Z" fill="white"/>
-                <path d="M20.4086 12.2402V16.0002H6.09863L8.74863 12.2402H20.4086Z" fill="#555555"/>
+                <path d="M20.4086 12.2402V16.0002H6.09863L8.74863 12.2402H20.4086Z" fill="#256BFA"/>
               </svg>
               <span className="hidden sm:inline">네이버지도</span>
               <span className="sm:hidden">네이버</span>
@@ -102,16 +102,20 @@ export default function LocationSection() {
               className="flex-1 bg-white text-black border border-gray-200 py-3 px-2 md:px-4 rounded-lg transition-colors text-xs md:text-sm font-medium flex items-center justify-center gap-1 md:gap-2 min-h-[48px] hover:bg-gray-50"
             >
               <svg width="14" height="12" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="md:w-[16px] md:h-[14px] flex-shrink-0">
-                <path d="M12.6951 0H0.955078V3.1H12.6951V0Z" fill="url(#neutral_tmap_top)"/>
-                <path d="M9.55508 14H6.45508V6.24C6.45508 2.8 9.25508 0 12.6951 0H15.0451V3.1H12.6951C10.9651 3.1 9.55508 4.51 9.55508 6.24V14Z" fill="url(#neutral_tmap_body)"/>
+                <path d="M12.6951 0H0.955078V3.1H12.6951V0Z" fill="url(#paint0_linear_1343_17036)"/>
+                <path d="M9.55508 14H6.45508V6.24C6.45508 2.8 9.25508 0 12.6951 0H15.0451V3.1H12.6951C10.9651 3.1 9.55508 4.51 9.55508 6.24V14Z" fill="url(#paint1_linear_1343_17036)"/>
                 <defs>
-                  <linearGradient id="neutral_tmap_top" x1="1.55508" y1="1.55" x2="7.54508" y2="1.55" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#222222"/>
-                    <stop offset="1" stopColor="#555555"/>
+                  <linearGradient id="paint0_linear_1343_17036" x1="1.55508" y1="1.55" x2="7.54508" y2="1.55" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#F545BA"/>
+                    <stop offset="1" stopColor="#783BFF"/>
                   </linearGradient>
-                  <linearGradient id="neutral_tmap_body" x1="7.84508" y1="9.57" x2="14.1151" y2="-1.38" gradientUnits="userSpaceOnUse">
-                    <stop stopColor="#111111"/>
-                    <stop offset="1" stopColor="#6B6B6B"/>
+                  <linearGradient id="paint1_linear_1343_17036" x1="7.84508" y1="9.57" x2="14.1151" y2="-1.38" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#0264FF"/>
+                    <stop offset="0.12" stopColor="#0A79F2"/>
+                    <stop offset="0.4" stopColor="#1AA5D6"/>
+                    <stop offset="0.65" stopColor="#26C6C3"/>
+                    <stop offset="0.86" stopColor="#2ED9B7"/>
+                    <stop offset="1" stopColor="#31E1B3"/>
                   </linearGradient>
                 </defs>
               </svg>
@@ -122,8 +126,8 @@ export default function LocationSection() {
               className="flex-1 bg-white text-black border border-gray-200 py-3 px-2 md:px-4 rounded-lg transition-colors text-xs md:text-sm font-medium flex items-center justify-center gap-1 md:gap-2 min-h-[48px] hover:bg-gray-50"
             >
               <svg width="14" height="14" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" className="md:w-[16px] md:h-[16px] flex-shrink-0">
-                <rect width="600" height="600" rx="100" ry="100" fill="#1F1F1F"/>
-                <path d="M300 100C383.137 100 450 166.863 450 250C450 322.351 390.73 379.887 353.553 432.579C331.193 464.175 318.621 496.927 309.34 523.065C306.878 529.937 298.489 530.061 296.027 523.189C286.411 496.297 273.103 463.236 246.494 429.337C207.508 379.844 150 322.057 150 250C150 166.863 216.863 100 300 100ZM300 180C266.863 180 240 206.863 240 240C240 273.137 266.863 300 300 300C333.137 300 360 273.137 360 240C360 206.863 333.137 180 300 180Z" fill="#F5F5F5"/>
+                <rect width="600" height="600" rx="100" ry="100" fill="#FFCD00"/>
+                <path d="M300 100C383.137 100 450 166.863 450 250C450 322.351 390.73 379.887 353.553 432.579C331.193 464.175 318.621 496.927 309.34 523.065C306.878 529.937 298.489 530.061 296.027 523.189C286.411 496.297 273.103 463.236 246.494 429.337C207.508 379.844 150 322.057 150 250C150 166.863 216.863 100 300 100ZM300 180C266.863 180 240 206.863 240 240C240 273.137 266.863 300 300 300C333.137 300 360 273.137 360 240C360 206.863 333.137 180 300 180Z" fill="#007BFF"/>
               </svg>
               <span className="hidden sm:inline">카카오맵</span>
               <span className="sm:hidden">카카오</span>

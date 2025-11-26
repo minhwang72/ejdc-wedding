@@ -18,6 +18,7 @@ export default function HomePage() {
   const [shareMenuOpen, setShareMenuOpen] = useState(false)
   const [mainImageUrl, setMainImageUrl] = useState<string>('')
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [shareVisible, setShareVisible] = useState(false)
 
   // 카카오 SDK 초기화
   useEffect(() => {
@@ -110,6 +111,16 @@ export default function HomePage() {
       }
     }
   }, [shareMenuOpen, closeShareMenu])
+
+  useEffect(() => {
+    const handleShareVisibility = () => {
+      const threshold = window.innerHeight * 0.6
+      setShareVisible(window.scrollY > threshold)
+    }
+    handleShareVisibility()
+    window.addEventListener('scroll', handleShareVisibility, { passive: true })
+    return () => window.removeEventListener('scroll', handleShareVisibility)
+  }, [])
 
   // 카카오톡 공유하기
   const shareKakao = () => {
@@ -204,7 +215,10 @@ export default function HomePage() {
       </div>
 
       {/* Share Button */}
-      <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8 flex items-center gap-3" data-share-buttons>
+      <div
+        className={`fixed bottom-6 right-6 md:bottom-8 md:right-8 flex items-center gap-3 transition-opacity duration-300 ${shareVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        data-share-buttons
+      >
         {/* 카카오톡 공유 버튼 */}
         <button
           className={`bg-yellow-500 text-black p-3 md:p-4 rounded-full shadow-lg transition-all duration-300 ${

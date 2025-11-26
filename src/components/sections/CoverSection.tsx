@@ -33,7 +33,7 @@ export default function CoverSection() {
 
   return (
     <section className="w-full min-h-screen">
-      <div className="relative w-full min-h-screen">
+      <div className="relative w-full min-h-screen flex flex-col">
         <div className="absolute inset-0">
           {isLoading ? (
             <div className="w-full h-full bg-gray-200 animate-pulse flex items-center justify-center">
@@ -59,7 +59,6 @@ export default function CoverSection() {
                 />
               </svg>
               <p className="text-sm text-gray-500">커버 사진을 준비 중입니다.</p>
-              <p className="text-xs text-gray-400 tracking-[0.3em] uppercase">Dochan &amp; Eunjin</p>
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/65" />
@@ -67,8 +66,14 @@ export default function CoverSection() {
 
         <div
           ref={photoAnimation.ref}
-          className={`relative z-10 flex flex-col justify-between h-full p-8 md:p-12 text-white transition-opacity duration-700 ${photoAnimation.animationClass}`}
+          className={`relative z-10 flex flex-col flex-1 px-6 md:px-12 py-10 text-white transition-opacity duration-700 ${photoAnimation.animationClass}`}
         >
+          <div className="text-left space-y-3 text-white/90 mb-auto" style={overlayTextShadow}>
+            <p className="text-[0.8rem] md:text-sm font-heading tracking-[0.4em] uppercase">April 11, 2026 · 1:00 PM</p>
+            <p className="text-base md:text-lg font-heading">정동제일교회 본당</p>
+            <p className="text-xs md:text-sm tracking-[0.3em] uppercase">Jeongdong First Methodist Church</p>
+          </div>
+
           <div
             className={`flex justify-between items-center text-[0.65rem] md:text-xs tracking-[0.35em] uppercase text-white/75 font-heading ${heartAnimation.animationClass}`}
             style={overlayTextShadow}
@@ -78,15 +83,13 @@ export default function CoverSection() {
             <span>은진</span>
           </div>
 
-          <div className={`space-y-4 text-left ${nameRowAnimation.animationClass}`} style={overlayTextShadow}>
-            <p className="text-sm md:text-base text-white/85 font-heading tracking-[0.3em] uppercase">도찬 & 은진</p>
-            <h1 className="text-[2.4rem] md:text-[3.4rem] leading-[1.05] font-heading">Dochan &amp; Eunjin</h1>
-          </div>
-
-          <div className="text-left space-y-2 text-white/90" style={overlayTextShadow}>
-            <p className="text-[0.75rem] md:text-sm font-heading tracking-[0.3em] uppercase">April 11, 2026 · 1:00 PM</p>
-            <p className="text-base md:text-lg font-heading">정동제일교회 본당</p>
-            <p className="text-xs md:text-sm tracking-[0.2em] uppercase">Jeongdong First Methodist Church</p>
+          <div className="text-center mt-auto pb-8" style={overlayTextShadow}>
+            <p className="text-lg md:text-2xl text-white font-heading tracking-[0.25em]">
+              도찬 & 은진
+            </p>
+            <p className="text-xs md:text-sm text-white/75 font-heading tracking-[0.3em] uppercase mt-1">
+              Dochan &amp; Eunjin
+            </p>
           </div>
         </div>
       </div>

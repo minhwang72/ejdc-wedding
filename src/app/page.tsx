@@ -54,7 +54,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 
   return {
-    title: "We invite you to our wedding | 현도찬 ♥ 김은진 결혼합니다",
+    title: "현도찬 ♥ 김은진 결혼합니다",
     description: "2026년 4월 11일 오후 1시, 정동제일교회에서 결혼식을 올립니다. We invite you to our wedding. 여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
     keywords: ["결혼식", "청첩장", "wedding", "invitation", "현도찬", "김은진", "정동제일교회"],
     openGraph: {

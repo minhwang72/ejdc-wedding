@@ -245,7 +245,7 @@ export default function HomePage({
           </button>
 
           <button
-            className={`bg-gray-700 text-white p-3 md:p-4 rounded-full shadow-lg transition-all duration-300 ${
+            className={`theme-button p-3 md:p-4 rounded-full shadow-lg transition-all duration-300 ${
               shareMenuOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
             }`}
             onClick={copyLink}
@@ -256,7 +256,7 @@ export default function HomePage({
           </button>
 
           <button
-            className="bg-gray-950 text-white p-3 md:p-4 rounded-full shadow-lg transition-colors"
+            className="theme-button p-3 md:p-4 rounded-full shadow-lg transition-colors"
             onClick={defaultShare}
           >
             {shareMenuOpen ? (

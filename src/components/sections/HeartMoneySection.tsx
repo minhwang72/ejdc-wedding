@@ -197,7 +197,10 @@ export default function HeartMoneySection() {
                                   className="text-gray-700 hover:text-black transition-colors p-1"
                                   aria-label={`${contact.name} 카카오페이로 송금`}
                                 >
-                                  <div className="w-4 h-4 bg-gray-900 rounded flex items-center justify-center">
+                                  <div
+                                    className="w-4 h-4 rounded flex items-center justify-center"
+                                    style={{ backgroundColor: 'var(--theme-accent-primary)' }}
+                                  >
                                     <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
                                       <path d="M12 3C6.48 3 2 6.58 2 11.25C2 14.17 4.09 16.68 7.25 18.03C6.94 19.1 6.44 20.75 6.44 20.75C6.44 20.75 6.84 20.97 7.25 20.75C8.31 20.19 9.81 19.31 10.75 18.75C11.15 18.81 11.56 18.84 12 18.84C17.52 18.84 22 15.26 22 10.59C22 5.92 17.52 2.34 12 2.34" />
                                     </svg>
@@ -285,7 +288,10 @@ export default function HeartMoneySection() {
                                   className="text-gray-700 hover:text-black transition-colors p-1"
                                   aria-label={`${contact.name} 카카오페이로 송금`}
                                 >
-                                  <div className="w-4 h-4 bg-gray-900 rounded flex items-center justify-center">
+                                  <div
+                                    className="w-4 h-4 rounded flex items-center justify-center"
+                                    style={{ backgroundColor: 'var(--theme-accent-primary)' }}
+                                  >
                                     <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
                                       <path d="M12 3C6.48 3 2 6.58 2 11.25C2 14.17 4.09 16.68 7.25 18.03C6.94 19.1 6.44 20.75 6.44 20.75C6.44 20.75 6.84 20.97 7.25 20.75C8.31 20.19 9.81 19.31 10.75 18.75C11.15 18.81 11.56 18.84 12 18.84C17.52 18.84 22 15.26 22 10.59C22 5.92 17.52 2.34 12 2.34" />
                                     </svg>

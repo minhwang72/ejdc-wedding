@@ -441,7 +441,7 @@ export default function LocalPage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() => contact.phone && handleCall(contact.phone)}
-                                className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg text-white font-medium shadow-sm bg-gray-900 text-sm hover:bg-black transition-colors"
+                                className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg font-medium shadow-sm theme-button text-sm transition-colors"
                               >
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.129-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -485,7 +485,8 @@ export default function LocalPage() {
                                     className="text-gray-700 hover:text-black transition-colors p-2 rounded-lg hover:bg-gray-100"
                                     aria-label={`${contact.name} 카카오페이로 송금`}
                                   >
-                                    <div className="w-5 h-5 bg-gray-900 rounded flex items-center justify-center">
+                                    <div className="w-5 h-5 rounded flex items-center justify-center"
+                                      style={{ backgroundColor: 'var(--theme-accent-primary)' }}>
                                       <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
                                         <path d="M12 3C6.48 3 2 6.58 2 11.25C2 14.17 4.09 16.68 7.25 18.03C6.94 19.1 6.44 20.75 6.44 20.75C6.44 20.75 6.84 20.97 7.25 20.75C8.31 20.19 9.81 19.31 10.75 18.75C11.15 18.81 11.56 18.84 12 18.84C17.52 18.84 22 15.26 22 10.59C22 5.92 17.52 2.34 12 2.34" />
                                       </svg>

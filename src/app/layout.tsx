@@ -6,6 +6,8 @@ import ThemeStyleInjector from '@/components/ThemeStyleInjector'
 import { DEFAULT_THEME } from '@/lib/themeConfig'
 import { getThemeSettings } from '@/lib/server/themeStore'
 
+export const dynamic = 'force-dynamic'
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const viewport: Viewport = {

@@ -347,7 +347,7 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
           >
             <button
               onClick={handleWrite}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-black text-white rounded-lg transition-colors font-sans font-medium text-sm md:text-base"
+              className="flex items-center gap-2 px-4 py-2 theme-button rounded-lg transition-colors font-sans font-medium text-sm md:text-base"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -535,7 +535,7 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="flex-1 py-2 px-4 text-sm md:text-base bg-gray-900 disabled:bg-gray-400 text-white rounded-md transition-colors"
+                  className="flex-1 py-2 px-4 text-sm md:text-base theme-button rounded-md transition-colors"
                 >
                   <span>
                     {isSubmitting ? '작성 중...' : '작성하기'}
@@ -596,7 +596,7 @@ export default function GuestbookSection({ guestbook, onGuestbookUpdate }: Guest
               <button
                 onClick={handleDeleteConfirm}
                 disabled={isDeleting}
-                className="flex-1 py-2 px-4 text-sm md:text-base bg-gray-900 disabled:bg-gray-400 text-white rounded-md transition-colors"
+                className="flex-1 py-2 px-4 text-sm md:text-base theme-button rounded-md transition-colors"
               >
                                   <span>
                     {isDeleting ? '삭제 중...' : '삭제'}

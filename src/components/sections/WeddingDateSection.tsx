@@ -95,7 +95,10 @@ export default function WeddingDateSection() {
                   <>
                     {/* 강조 원 배경 */}
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-8 md:w-10 h-8 md:h-10 bg-gray-900 rounded-full shadow-sm"></div>
+                      <div
+                        className="w-8 md:w-10 h-8 md:h-10 rounded-full shadow-sm"
+                        style={{ backgroundColor: 'var(--theme-accent-secondary)' }}
+                      ></div>
                     </div>
                     {/* 흰색 숫자 */}
                     <span className="relative z-10 text-white font-medium">

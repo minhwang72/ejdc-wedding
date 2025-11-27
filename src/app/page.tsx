@@ -2,6 +2,8 @@ import { Metadata } from 'next'
 import type { Gallery } from '@/types'
 import HomePage from '@/components/HomePage'
 
+export const revalidate = 0
+
 // 동적 메타데이터 생성
 export async function generateMetadata(): Promise<Metadata> {
   // 기본 이미지를 실제 존재하는 메인 이미지로 설정

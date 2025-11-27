@@ -1829,7 +1829,7 @@ function AdminPageContent() {
                 { key: 'contacts', label: '연락처 관리' },
                 { key: 'gallery', label: '갤러리 관리' },
                 { key: 'guestbook', label: '방명록 관리' },
-                { key: 'blessing', label: '축복 문구' },
+                { key: 'blessing', label: '문구 관리' },
               ].map((tab) => (
                 <button
                   key={tab.key}

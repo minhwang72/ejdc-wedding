@@ -68,9 +68,9 @@ export default function CoverSection() {
           className={`relative z-10 flex flex-col flex-1 px-6 md:px-12 py-10 text-white transition-opacity duration-700 ${photoAnimation.animationClass}`}
         >
           <div className="text-left space-y-3 text-white/90 mb-auto" style={overlayTextShadow}>
-            <p className="text-[0.8rem] md:text-sm font-heading tracking-[0.4em] uppercase">April 11, 2026 · 1:00 PM</p>
+            <p className="text-[0.8rem] md:text-sm font-heading tracking-[0.4em] uppercase">April 11, 2026 · 12:00 PM</p>
             <p className="text-base md:text-lg font-heading">정동제일교회 본당</p>
-            <p className="text-xs md:text-sm tracking-[0.3em] uppercase">Jeongdong First Methodist Church</p>
+            <p className="text-xs md:text-sm tracking-[0.3em] uppercase">CHUNGDONG First Methodist Church</p>
           </div>
 
           <div

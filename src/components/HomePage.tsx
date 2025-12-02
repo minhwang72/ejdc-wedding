@@ -149,7 +149,7 @@ export default function HomePage({
           objectType: 'feed',
           content: {
             title: '현도찬 ♥ 김은진 결혼합니다',
-            description: '2026년 4월 11일 오후 1시\n정동제일교회에서 결혼식을 올립니다.\nWe invite you to our wedding.\n여러분의 축복으로 더 아름다운 날이 되길 바랍니다.',
+            description: '2026년 4월 11일 오후 12시\n정동제일교회에서 결혼식을 올립니다.\nWe invite you to our wedding.\n여러분의 축복으로 더 아름다운 날이 되길 바랍니다.',
             imageUrl: shareImageUrl,
             link: {
               mobileWebUrl: 'https://ejdc.eungming.com',
@@ -212,18 +212,19 @@ export default function HomePage({
       <DevToolsBlocker />
       <div className="w-full max-w-[500px] mx-auto bg-white md:rounded-2xl md:shadow-lg overflow-hidden">
         <CoverSection />
-        <CountdownSection />
+        {/* <CountdownSection /> */}
         <BlessingSection />
         
         <WeddingDateSection />
-        <ContactSection />
+        {/* <ContactSection /> */}
         
         <LazyGallerySection />
         
-        <LocationSection />
         <HeartMoneySection />
         
         <LazyGuestbookSection />
+        <LocationSection />
+
         
         <Footer />
       </div>

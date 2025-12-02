@@ -53,11 +53,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: "도찬 ♥ 은진\'s Wedding",
-    description: "2026년 4월 11일 오후 1시, 정동제일교회에서 결혼식을 올립니다. 여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
+    description: "2026년 4월 11일 오후 12시, 정동제일교회에서 결혼식을 올립니다. 여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
     keywords: ["결혼식", "청첩장", "wedding", "invitation", "현도찬", "김은진", "정동제일교회"],
     openGraph: {
       title: "도찬 ♥ 은진\'s Wedding",
-      description: "2026년 4월 11일 오후 1시\n정동제일교회에서 결혼식을 올립니다.\n여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
+      description: "2026년 4월 11일 오후 12시\n정동제일교회에서 결혼식을 올립니다.\n여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
       url: "https://ejdc.eungming.com",
       siteName: "현도찬 ♥ 김은진 결혼식 청첩장",
       images: [
@@ -74,7 +74,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title: "도찬 ♥ 은진\'s Wedding",
-      description: "2026년 4월 11일 오후 1시, 정동제일교회에서 결혼식을 올립니다. 여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
+      description: "2026년 4월 11일 오후 12시, 정동제일교회에서 결혼식을 올립니다. 여러분의 축복으로 더 아름다운 날이 되길 바랍니다.",
       images: [imageUrl],
     },
     icons: {

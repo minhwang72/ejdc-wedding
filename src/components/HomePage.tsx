@@ -2,9 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import CoverSection from '@/components/sections/CoverSection'
-import CountdownSection from '@/components/sections/CountdownSection'
 import WeddingDateSection from '@/components/sections/WeddingDateSection'
-import ContactSection from '@/components/sections/ContactSection'
 import BlessingSection from '@/components/sections/BlessingSection'
 import LocationSection from '@/components/sections/DetailsSection'
 import HeartMoneySection from '@/components/sections/HeartMoneySection'

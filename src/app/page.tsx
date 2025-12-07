@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const baseUrl = process.env.INTERNAL_API_URL || 
       (process.env.NODE_ENV === 'production' 
         ? 'http://127.0.0.1:1140'  // Docker 내부에서는 HTTP 사용 (IPv4)
-        : 'http://localhost:3000')  // 개발 환경
+        : 'http://127.0.0.1:3000')  // 개발 환경 (IPv4)
       
     console.log(`[DEBUG] Fetching gallery data from: ${baseUrl}/api/gallery`)
     const response = await fetch(`${baseUrl}/api/gallery`, {

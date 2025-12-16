@@ -176,11 +176,11 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
             {imagesToShow.map((item, index) => (
               <div
                 key={index}
-                className="relative aspect-square cursor-pointer transition-opacity rounded-lg overflow-hidden"
+                className="relative aspect-square cursor-pointer transition-opacity rounded-lg bg-gray-50 flex items-center justify-center"
                 onClick={() => openModal(index)}
               >
                 {('isPlaceholder' in item && item.isPlaceholder) || failedImages.has(item.id) ? (
-                  <div className="relative aspect-square bg-gray-100 flex items-center justify-center">
+                  <div className="relative aspect-square bg-gray-100 flex items-center justify-center rounded-lg">
                     <svg
                       className="w-8 md:w-12 h-8 md:h-12 text-gray-300"
                       fill="none"
@@ -200,7 +200,7 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
                   <img
                     src={item.url}
                     alt="Gallery"
-                    className="w-full h-full object-contain bg-gray-50 rounded-lg"
+                    className="max-w-full max-h-full object-contain rounded-lg"
                     onError={() => handleImageError(item.id)}
                   />
                 )}
@@ -218,7 +218,7 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
                 onClick={() => setShowAll(!showAll)}
                 className="flex flex-col items-center gap-2 text-gray-800 transition-colors"
               >
-                <span className="text-sm font-light" style={{ fontFamily: 'SeoulNamsanL, -apple-system, BlinkMacSystemFont, system-ui, sans-serif' }}>
+                <span className="text-sm font-light">
                   {showAll ? '접기' : '더보기'}
                 </span>
                 <svg

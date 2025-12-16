@@ -54,15 +54,6 @@
   font-display: swap;
 }
 
-/* 서울남산체L 웹폰트 */
-@font-face {
-  font-family: 'SeoulNamsanL';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/SeoulNamsanL.woff') format('woff');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Edu SA Hand 영어 폰트 (Google Fonts) */
 @import url('https://fonts.googleapis.com/css2?family=Edu+SA+Hand:wght@400;500;600;700&display=swap');
 

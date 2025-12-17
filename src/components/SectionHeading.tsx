@@ -41,7 +41,7 @@ export default function SectionHeading({
         </p>
       )}
       {hasTitle && (
-        <h2 className={['section-title leading-[1.25]', 'py-1.5', sizeClass[size]].join(' ')}>
+        <h2 className={['section-title leading-[1.25]', 'py-1.5', 'font-bold', sizeClass[size]].join(' ')}>
           {title}
         </h2>
       )}

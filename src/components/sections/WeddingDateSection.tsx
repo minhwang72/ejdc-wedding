@@ -63,7 +63,7 @@ export default function WeddingDateSection() {
             kicker="Schedule"
             title="4월"
             description=" "
-            size="md"
+            size="sm"
           />
         </div>
 

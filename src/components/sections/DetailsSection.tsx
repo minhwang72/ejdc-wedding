@@ -67,7 +67,7 @@ export default function LocationSection() {
               kicker="Venue"
               title="오시는길"
               description="서울 중구 정동길 46 · 2층 본당"
-              size="md"
+              size="sm"
             />
           </div>
 

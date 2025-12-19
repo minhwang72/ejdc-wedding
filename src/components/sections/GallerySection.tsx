@@ -176,11 +176,11 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
             {imagesToShow.map((item, index) => (
               <div
                 key={index}
-                className="relative aspect-square cursor-pointer transition-opacity rounded-lg bg-gray-50 flex items-center justify-center"
+                className="relative aspect-[2/3] cursor-pointer transition-opacity rounded-lg overflow-hidden bg-gray-50"
                 onClick={() => openModal(index)}
               >
                 {('isPlaceholder' in item && item.isPlaceholder) || failedImages.has(item.id) ? (
-                  <div className="relative aspect-square bg-gray-100 flex items-center justify-center rounded-lg">
+                  <div className="relative w-full h-full bg-gray-100 flex items-center justify-center">
                     <svg
                       className="w-8 md:w-12 h-8 md:h-12 text-gray-300"
                       fill="none"
@@ -200,7 +200,7 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
                   <img
                     src={item.url}
                     alt="Gallery"
-                    className="max-w-full max-h-full object-contain rounded-lg"
+                    className="w-full h-full object-cover rounded-lg"
                     onError={() => handleImageError(item.id)}
                   />
                 )}

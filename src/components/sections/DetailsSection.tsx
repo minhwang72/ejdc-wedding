@@ -195,10 +195,18 @@ export default function LocationSection() {
                 </svg>
                 <h3 className="text-base md:text-lg font-bold text-black">지하철</h3>
               </div>
-              <p className="text-black leading-relaxed ml-7 text-sm md:text-base">
-                <span className="font-bold">지하철 1,2호선 시청역</span> 하차, 덕수궁 쪽 출구로 나오셔서<br />
-                덕수궁 돌담길을 따라 도보 5분
-              </p>
+              <div className="ml-7">
+                <div className="mb-2">
+                  <p className="text-black leading-relaxed text-sm md:text-base">
+                    <span className="font-bold">지하철 1,2호선 시청역</span> 하차, 덕수궁 쪽 출구로 나오셔서
+                  </p>
+                </div>
+                <div>
+                  <p className="text-black leading-relaxed text-sm md:text-base">
+                    덕수궁 돌담길을 따라 도보 5분
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* 구분선 */}

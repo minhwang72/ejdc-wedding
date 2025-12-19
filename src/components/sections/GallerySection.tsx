@@ -171,7 +171,7 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
           {/* 갤러리 그리드 */}
           <div 
             ref={gridAnimation.ref}
-            className={`grid grid-cols-2 gap-2 md:gap-3 mb-6 md:mb-8 transition-all duration-800 ${gridAnimation.animationClass}`}
+            className={`grid grid-cols-3 gap-2 md:gap-3 mb-6 md:mb-8 transition-all duration-800 ${gridAnimation.animationClass}`}
           >
             {imagesToShow.map((item, index) => (
               <div

@@ -1830,12 +1830,34 @@ function AdminPageContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       })
+
+      // 응답 상태 확인
+      if (!res.ok) {
+        // 에러 응답 처리
+        let errorMessage = '로그인에 실패했습니다.'
+        try {
+          const errorData = await res.json()
+          errorMessage = errorData.message || errorData.error || errorMessage
+        } catch {
+          // JSON 파싱 실패 시 상태 코드로 메시지 결정
+          if (res.status === 403) {
+            errorMessage = '접근이 거부되었습니다. 서버 설정을 확인해주세요.'
+          } else if (res.status === 401) {
+            errorMessage = '잘못된 사용자명 또는 비밀번호입니다.'
+          }
+        }
+        alert(errorMessage)
+        return
+      }
+
       const data = await res.json()
 
       if (data.success) {
         setIsAuthenticated(true)
+        // 로그인 성공 후 테마 설정 불러오기
+        fetchThemeSettings()
       } else {
-        alert(data.error || '로그인에 실패했습니다.')
+        alert(data.message || data.error || '로그인에 실패했습니다.')
       }
     } catch (error) {
       console.error('Login failed:', error)
@@ -1958,6 +1980,19 @@ function AdminPageContent() {
     try {
       setLoading(prev => ({ ...prev, theme: true }))
       const res = await fetch(`/api/admin/theme?t=${Date.now()}`)
+      
+      // 응답 상태 확인
+      if (!res.ok) {
+        // 401 에러는 인증이 필요한 경우이므로 조용히 처리
+        if (res.status === 401) {
+          console.log('Theme API requires authentication')
+          return
+        }
+        // 다른 에러는 로그만 남김
+        console.error('Theme API error:', res.status)
+        return
+      }
+      
       const data = await res.json()
       if (data.success && data.data) {
         setThemeSettings(data.data)
@@ -1986,8 +2021,11 @@ function AdminPageContent() {
 
   useEffect(() => {
     fetchData()
-    fetchThemeSettings()
-  }, [fetchData, fetchThemeSettings])
+    // 테마 설정은 인증 후에만 불러오기
+    if (isAuthenticated) {
+      fetchThemeSettings()
+    }
+  }, [fetchData, fetchThemeSettings, isAuthenticated])
 
   if (loading.auth) {
     return <Loading />

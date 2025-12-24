@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import pool from '@/lib/db'
 import { verifyPassword } from '@/lib/encryption'
 
+// Next.js 라우트 핸들러 설정
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
+
 // CORS preflight 요청 처리
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -17,7 +21,18 @@ export async function OPTIONS() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { username, password } = await request.json()
+    // 요청 본문 파싱
+    let body
+    try {
+      body = await request.json()
+    } catch (parseError) {
+      return NextResponse.json(
+        { success: false, message: '요청 데이터를 파싱할 수 없습니다.' },
+        { status: 400 }
+      )
+    }
+    
+    const { username, password } = body
 
     if (!username || !password) {
       return NextResponse.json(
@@ -87,9 +102,15 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Login error:', error)
-    return NextResponse.json(
+    const errorResponse = NextResponse.json(
       { success: false, message: '로그인 처리 중 오류가 발생했습니다.' },
       { status: 500 }
     )
+    // 에러 응답에도 CORS 헤더 추가
+    errorResponse.headers.set('Access-Control-Allow-Origin', '*')
+    errorResponse.headers.set('Access-Control-Allow-Methods', 'POST, OPTIONS')
+    errorResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type')
+    errorResponse.headers.set('Access-Control-Allow-Credentials', 'true')
+    return errorResponse
   }
 } 

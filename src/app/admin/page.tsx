@@ -1827,7 +1827,10 @@ function AdminPageContent() {
     try {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // 쿠키 포함
         body: JSON.stringify({ username, password }),
       })
 
@@ -1853,9 +1856,12 @@ function AdminPageContent() {
       const data = await res.json()
 
       if (data.success) {
-        setIsAuthenticated(true)
-        // 로그인 성공 후 테마 설정 불러오기
-        fetchThemeSettings()
+        // 로그인 성공 - 쿠키가 설정되기를 잠시 대기 후 인증 상태 업데이트
+        setTimeout(() => {
+          setIsAuthenticated(true)
+          // 로그인 성공 후 테마 설정 불러오기
+          fetchThemeSettings()
+        }, 100)
       } else {
         alert(data.message || data.error || '로그인에 실패했습니다.')
       }

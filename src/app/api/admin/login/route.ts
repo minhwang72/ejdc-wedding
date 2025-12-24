@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     let body
     try {
       body = await request.json()
-    } catch (parseError) {
+    } catch {
       return NextResponse.json(
         { success: false, message: '요청 데이터를 파싱할 수 없습니다.' },
         { status: 400 }

@@ -62,6 +62,11 @@ export async function generateMetadata(): Promise<Metadata> {
       // 오류 발생 시 기본 메인 이미지 사용
       console.log(`[DEBUG] Using fallback image: ${imageUrl}`)
     }
+  } catch (error) {
+    console.error('Error in generateMetadata:', error)
+    // 오류 발생 시 기본 메인 이미지 사용
+    console.log(`[DEBUG] Using fallback image: ${imageUrl}`)
+  }
 
   return {
     metadataBase: new URL('https://ejdc.eungming.com'),

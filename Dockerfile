@@ -76,7 +76,8 @@ ENV PORT 1140
 ENV HOSTNAME "0.0.0.0"
 
 # Healthcheck using node (no curl needed)
-HEALTHCHECK --interval=30s --timeout=3s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://127.0.0.1:1140/', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1))"
+# Increased timeout to 10s to handle slow database connections
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD node -e "require('http').get('http://127.0.0.1:1140/api/health', {timeout: 8000}, (res) => { process.exit(res.statusCode === 200 ? 0 : 1) }).on('error', () => process.exit(1)).on('timeout', () => process.exit(1))"
 
 CMD ["node", "server.js"] 

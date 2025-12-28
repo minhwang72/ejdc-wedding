@@ -17,39 +17,51 @@ export async function generateMetadata(): Promise<Metadata> {
         : 'http://127.0.0.1:3000')  // 개발 환경 (IPv4)
       
     console.log(`[DEBUG] Fetching gallery data from: ${baseUrl}/api/gallery`)
-    const response = await fetch(`${baseUrl}/api/gallery`, {
-      next: { revalidate: 60 * 60 }, // 1시간마다 최신 메타 이미지 갱신
-      headers: {
-        'User-Agent': 'ejdcBot/1.0 (Wedding Invitation Metadata Generator)',
-      }
-    })
+    // 타임아웃을 위한 AbortController 사용
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000) // 5초 타임아웃
     
-    console.log(`[DEBUG] Gallery API response status: ${response.status}`)
-    
-    if (response.ok) {
-      const data = await response.json()
-      console.log(`[DEBUG] Gallery API response data:`, data)
-      
-      if (data.success) {
-        const mainImage = data.data.find((img: Gallery) => img.image_type === 'main')
-        console.log(`[DEBUG] Found main image:`, mainImage)
-        
-        if (mainImage?.url) {
-          // URL이 상대 경로인 경우 절대 경로로 변환 (타임스탬프 제거)
-          imageUrl = mainImage.url.startsWith('http') 
-            ? mainImage.url
-            : `https://ejdc.eungming.com${mainImage.url}`
-          console.log(`[DEBUG] Final image URL:`, imageUrl)
+    try {
+      const response = await fetch(`${baseUrl}/api/gallery`, {
+        signal: controller.signal,
+        next: { revalidate: 60 * 60 }, // 1시간마다 최신 메타 이미지 갱신
+        headers: {
+          'User-Agent': 'ejdcBot/1.0 (Wedding Invitation Metadata Generator)',
         }
+      })
+      clearTimeout(timeoutId)
+    
+      console.log(`[DEBUG] Gallery API response status: ${response.status}`)
+      
+      if (response.ok) {
+        const data = await response.json()
+        console.log(`[DEBUG] Gallery API response data:`, data)
+        
+        if (data.success) {
+          const mainImage = data.data.find((img: Gallery) => img.image_type === 'main')
+          console.log(`[DEBUG] Found main image:`, mainImage)
+          
+          if (mainImage?.url) {
+            // URL이 상대 경로인 경우 절대 경로로 변환 (타임스탬프 제거)
+            imageUrl = mainImage.url.startsWith('http') 
+              ? mainImage.url
+              : `https://ejdc.eungming.com${mainImage.url}`
+            console.log(`[DEBUG] Final image URL:`, imageUrl)
+          }
+        }
+      } else {
+        console.error(`[DEBUG] Gallery API failed with status: ${response.status}`)
       }
-    } else {
-      console.error(`[DEBUG] Gallery API failed with status: ${response.status}`)
+    } catch (error) {
+      clearTimeout(timeoutId)
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.error('Error fetching main image for metadata: Request timeout')
+      } else {
+        console.error('Error fetching main image for metadata:', error)
+      }
+      // 오류 발생 시 기본 메인 이미지 사용
+      console.log(`[DEBUG] Using fallback image: ${imageUrl}`)
     }
-  } catch (error) {
-    console.error('Error fetching main image for metadata:', error)
-    // 오류 발생 시 기본 메인 이미지 사용
-    console.log(`[DEBUG] Using fallback image: ${imageUrl}`)
-  }
 
   return {
     metadataBase: new URL('https://ejdc.eungming.com'),

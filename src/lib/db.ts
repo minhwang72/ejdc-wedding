@@ -22,26 +22,52 @@ const pool = mysql.createPool({
   connectTimeout: 10000, // 10초 연결 타임아웃
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
-  // 연결이 끊어졌을 때 자동으로 재연결 시도
-  // mysql2는 기본적으로 자동 재연결을 지원하지 않으므로 모니터링으로 처리
 })
 
 // 기존 pool export
 export default pool
 
-// 연결 풀 상태 모니터링 (5분마다 체크하여 연결이 살아있는지 확인)
-// 연결이 끊어졌을 경우 로그만 남기고, mysql2가 자동으로 재연결을 시도함
+// 연결 풀 상태 모니터링 및 장기 운영 안정성 확보
+// 3분마다 체크하여 연결이 살아있는지 확인하고, 통계 정보도 로깅
 if (typeof process !== 'undefined' && process.env.NODE_ENV === 'production') {
+  let consecutiveErrors = 0
+  const MAX_CONSECUTIVE_ERRORS = 5 // 5회 연속 실패 시 경고
+  
   setInterval(async () => {
     try {
       const connection = await pool.getConnection()
       await connection.ping() // 연결이 살아있는지 확인
       connection.release()
-      console.log('[DB] Connection pool is healthy')
+      
+      consecutiveErrors = 0 // 성공 시 에러 카운터 리셋
     } catch (error) {
-      console.error('[DB] Connection pool error:', error)
-      // mysql2는 연결이 끊어지면 자동으로 재연결을 시도함
-      // 여기서는 로그만 남기고 모니터링
+      consecutiveErrors++
+      console.error(`[DB] Connection pool error (${consecutiveErrors}/${MAX_CONSECUTIVE_ERRORS}):`, error)
+      
+      // 연속 에러가 많으면 경고
+      if (consecutiveErrors >= MAX_CONSECUTIVE_ERRORS) {
+        console.error('[DB] ⚠️ WARNING: Multiple consecutive connection pool errors detected!')
+        consecutiveErrors = 0 // 리셋하여 반복 경고 방지
+      }
     }
-  }, 5 * 60 * 1000) // 5분마다 체크
+  }, 3 * 60 * 1000) // 3분마다 체크 (더 자주 모니터링)
+  
+  // 메모리 사용량 모니터링 (30분마다)
+  setInterval(() => {
+    if (typeof process !== 'undefined' && process.memoryUsage) {
+      const memUsage = process.memoryUsage()
+      const memUsageMB = {
+        rss: Math.round(memUsage.rss / 1024 / 1024),
+        heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024),
+        heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024),
+        external: Math.round(memUsage.external / 1024 / 1024)
+      }
+      console.log('[DB] Memory usage:', memUsageMB, 'MB')
+      
+      // 메모리 사용량이 500MB를 넘으면 경고
+      if (memUsageMB.heapUsed > 500) {
+        console.warn('[DB] ⚠️ WARNING: High memory usage detected!')
+      }
+    }
+  }, 30 * 60 * 1000) // 30분마다
 }

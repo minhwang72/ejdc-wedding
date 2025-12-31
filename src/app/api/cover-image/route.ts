@@ -1,81 +1,28 @@
 import { NextResponse } from 'next/server'
-import pool from '@/lib/db'
 import type { ApiResponse } from '@/types'
+import { getCoverImageData } from '@/lib/get-cover-data'
+
+// Node.js 런타임 명시 (fs 모듈 사용 가능하도록)
+export const runtime = 'nodejs'
 
 export async function GET() {
   try {
-    console.log('[DEBUG] cover-image API: Starting query...')
+    const coverData = await getCoverImageData()
     
-    // 메인 이미지 조회 (삭제되지 않은 것 중 가장 최근 것)
-    const [rows] = await pool.query(`
-      SELECT filename, updated_at, created_at
-      FROM gallery 
-      WHERE image_type = 'main' 
-        AND deleted_at IS NULL 
-        AND filename IS NOT NULL
-        AND filename != ''
-      ORDER BY created_at DESC 
-      LIMIT 1
-    `)
-    
-    console.log('[DEBUG] cover-image API: Query result rows:', Array.isArray(rows) ? rows.length : 'not array', rows)
-    
-    const result = rows as { filename: string; updated_at: Date | string; created_at: Date | string }[]
-    
-    if (!Array.isArray(result) || result.length === 0) {
-      console.log('[DEBUG] cover-image API: No cover image found in database')
+    if (!coverData) {
       return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: 'No cover image found',
       }, { status: 404 })
     }
-    
-    console.log('[DEBUG] cover-image API: Found image:', result[0].filename)
 
-    // 이미지 업데이트 시간을 기반으로 버전 생성 (카카오톡 캐시 무효화)
-    // updated_at이 없으면 created_at 사용, 둘 다 없으면 현재 시간 사용
-    let timestamp: number
-    try {
-      if (result[0].updated_at) {
-        timestamp = result[0].updated_at instanceof Date 
-          ? result[0].updated_at.getTime() 
-          : new Date(result[0].updated_at).getTime()
-      } else if (result[0].created_at) {
-        timestamp = result[0].created_at instanceof Date 
-          ? result[0].created_at.getTime() 
-          : new Date(result[0].created_at).getTime()
-      } else {
-        timestamp = Date.now()
-      }
-    } catch (error) {
-      // 타임스탬프 생성 실패 시 현재 시간 사용
-      console.error('Error generating timestamp from DB:', error)
-      timestamp = Date.now()
-    }
-    
-    // 이미지 파일의 실제 수정 시간도 확인 (더 정확한 버전 관리)
-    // 파일 접근 실패 시에도 API는 정상 동작해야 함
-    try {
-      const { stat } = await import('fs/promises')
-      const { join } = await import('path')
-      const uploadsDir = process.env.UPLOAD_DIR || process.cwd() + '/public/uploads'
-      const filePath = join(uploadsDir, result[0].filename)
-      const fileStat = await stat(filePath)
-      // 파일 수정 시간이 더 최신이면 그것을 사용
-      if (fileStat.mtime.getTime() > timestamp) {
-        timestamp = fileStat.mtime.getTime()
-      }
-      } catch {
-        // 파일이 없거나 접근할 수 없으면 DB 시간 사용 (정상 동작)
-        // 에러를 로그로만 남기고 API는 계속 진행
-        console.log('Could not read file stat, using DB timestamp')
-      }
-    
-    const version = timestamp
+    // 추가 타임스탬프를 붙여 더 강력한 캐시 버스팅
+    const separator = coverData.url.includes('?') ? '&' : '?'
+    const urlWithTimestamp = `${coverData.url}${separator}t=${Date.now()}`
 
     return NextResponse.json<ApiResponse<{ url: string }>>({
       success: true,
-      data: { url: `/uploads/${result[0].filename}?v=${version}` },
+      data: { url: urlWithTimestamp },
     })
   } catch (error) {
     console.error('[DEBUG] cover-image API: Error details:', {

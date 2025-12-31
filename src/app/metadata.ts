@@ -5,19 +5,21 @@ export async function generateMetadata(): Promise<Metadata> {
   const { getCoverImageData } = await import('@/lib/get-cover-data')
   const coverData = await getCoverImageData()
   
-  // 데이터가 없으면 기본 이미지 사용
+  const baseUrl = 'https://ejdc.eungming.com'
+  const now = new Date().getTime() // 매번 바뀌는 번호 생성
+  
   let imageUrl: string
   if (coverData) {
-    const baseUrl = 'https://ejdc.eungming.com'
-    const rawUrl = `${baseUrl}${coverData.url}`
-    // 추가 타임스탬프를 붙여 더 강력한 캐시 버스팅
-    const separator = rawUrl.includes('?') ? '&' : '?'
-    imageUrl = `${rawUrl}${separator}t=${new Date().getTime()}`
+    // DB에서 가져온 경우 - 이미 v= 파라미터가 있을 수 있으므로 &로 추가
+    imageUrl = `${baseUrl}${coverData.url}&t=${now}`
     console.log(`[DEBUG] generateMetadata: Using cover image from DB:`, imageUrl)
   } else {
-    imageUrl = 'https://ejdc.eungming.com/uploads/images/main_cover.jpg'
-    console.log(`[DEBUG] generateMetadata: Using fallback image:`, imageUrl)
+    // [중요] DB에 데이터가 없어서 기본 이미지를 쓸 때도 숫자를 강제로 붙입니다!
+    imageUrl = `${baseUrl}/uploads/images/main_cover.jpg?t=${now}`
+    console.log(`[DEBUG] generateMetadata: Using fallback image with timestamp:`, imageUrl)
   }
+  
+  console.log("최종 이미지 경로:", imageUrl)
 
   return {
     metadataBase: new URL('https://ejdc.eungming.com'),

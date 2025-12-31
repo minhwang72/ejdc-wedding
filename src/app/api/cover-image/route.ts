@@ -4,6 +4,8 @@ import type { ApiResponse } from '@/types'
 
 export async function GET() {
   try {
+    console.log('[DEBUG] cover-image API: Starting query...')
+    
     // 메인 이미지 조회 (삭제되지 않은 것 중 가장 최근 것)
     const [rows] = await pool.query(`
       SELECT filename, updated_at, created_at
@@ -11,18 +13,24 @@ export async function GET() {
       WHERE image_type = 'main' 
         AND deleted_at IS NULL 
         AND filename IS NOT NULL
+        AND filename != ''
       ORDER BY created_at DESC 
       LIMIT 1
     `)
     
+    console.log('[DEBUG] cover-image API: Query result rows:', Array.isArray(rows) ? rows.length : 'not array', rows)
+    
     const result = rows as { filename: string; updated_at: Date | string; created_at: Date | string }[]
     
-    if (result.length === 0) {
+    if (!Array.isArray(result) || result.length === 0) {
+      console.log('[DEBUG] cover-image API: No cover image found in database')
       return NextResponse.json<ApiResponse<null>>({
         success: false,
         error: 'No cover image found',
       }, { status: 404 })
     }
+    
+    console.log('[DEBUG] cover-image API: Found image:', result[0].filename)
 
     // 이미지 업데이트 시간을 기반으로 버전 생성 (카카오톡 캐시 무효화)
     // updated_at이 없으면 created_at 사용, 둘 다 없으면 현재 시간 사용
@@ -70,11 +78,15 @@ export async function GET() {
       data: { url: `/uploads/${result[0].filename}?v=${version}` },
     })
   } catch (error) {
-    console.error('Error fetching cover image:', error)
+    console.error('[DEBUG] cover-image API: Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      error: error
+    })
     return NextResponse.json<ApiResponse<null>>(
       {
         success: false,
-        error: 'Failed to fetch cover image',
+        error: error instanceof Error ? error.message : 'Failed to fetch cover image',
       },
       { status: 500 }
     )

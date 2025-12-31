@@ -28,6 +28,10 @@ export default function CoverSection() {
         const data = await response.json()
         if (data.success && data.data?.url) {
           setImageUrl(data.data.url)
+        } else {
+          // API가 실패하거나 이미지가 없으면 기본 이미지 사용
+          console.warn('Cover image API failed or no image found, using fallback')
+          setImageUrl('/uploads/images/main_cover.jpg')
         }
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
@@ -36,6 +40,7 @@ export default function CoverSection() {
           console.error('Error fetching cover image:', error)
         }
         // 에러 발생 시 기본 이미지 사용 (무한 로딩 방지)
+        setImageUrl('/uploads/images/main_cover.jpg')
       } finally {
         setIsLoading(false)
       }

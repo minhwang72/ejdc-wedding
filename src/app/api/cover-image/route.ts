@@ -25,10 +25,37 @@ export async function GET() {
     }
 
     // 이미지 업데이트 시간을 기반으로 버전 생성 (카카오톡 캐시 무효화)
-    const updatedAt = result[0].updated_at || result[0].created_at
-    const version = updatedAt instanceof Date 
-      ? updatedAt.getTime() 
-      : new Date(updatedAt).getTime()
+    // updated_at이 없으면 created_at 사용, 둘 다 없으면 현재 시간 사용
+    let timestamp: number
+    if (result[0].updated_at) {
+      timestamp = result[0].updated_at instanceof Date 
+        ? result[0].updated_at.getTime() 
+        : new Date(result[0].updated_at).getTime()
+    } else if (result[0].created_at) {
+      timestamp = result[0].created_at instanceof Date 
+        ? result[0].created_at.getTime() 
+        : new Date(result[0].created_at).getTime()
+    } else {
+      timestamp = Date.now()
+    }
+    
+    // 이미지 파일의 실제 수정 시간도 확인 (더 정확한 버전 관리)
+    try {
+      const { stat } = await import('fs/promises')
+      const { join } = await import('path')
+      const uploadsDir = process.env.UPLOAD_DIR || '/app/public/uploads'
+      const filePath = join(uploadsDir, result[0].filename)
+      const fileStat = await stat(filePath)
+      // 파일 수정 시간이 더 최신이면 그것을 사용
+      if (fileStat.mtime.getTime() > timestamp) {
+        timestamp = fileStat.mtime.getTime()
+      }
+    } catch (fileError) {
+      // 파일이 없거나 접근할 수 없으면 DB 시간 사용
+      console.log('Could not read file stat, using DB timestamp:', fileError)
+    }
+    
+    const version = timestamp
 
     return NextResponse.json<ApiResponse<{ url: string }>>({
       success: true,

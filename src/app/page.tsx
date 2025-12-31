@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import HomePage from '@/components/HomePage'
 
+export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 // 동적 메타데이터 생성
@@ -23,7 +24,8 @@ export async function generateMetadata(): Promise<Metadata> {
     try {
       const response = await fetch(`${baseUrl}/api/cover-image`, {
         signal: controller.signal,
-        next: { revalidate: 60 * 60 }, // 1시간마다 최신 메타 이미지 갱신
+        cache: 'no-store', // 캐시 사용 안 함
+        next: { revalidate: 0 }, // 즉시 재검증
         headers: {
           'User-Agent': 'ejdcBot/1.0 (Wedding Invitation Metadata Generator)',
         }

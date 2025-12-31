@@ -36,11 +36,15 @@ export async function generateMetadata(): Promise<Metadata> {
       
       if (data.success && data.data?.url) {
         // URL이 상대 경로인 경우 절대 경로로 변환
-        // 이미지 URL에 이미 버전 쿼리 파라미터가 포함되어 있을 수 있음
-        imageUrl = data.data.url.startsWith('http') 
+        const rawUrl = data.data.url.startsWith('http') 
           ? data.data.url
           : `https://ejdc.eungming.com${data.data.url}`
-        console.log(`[DEBUG] Final image URL:`, imageUrl)
+        
+        // URL 뒤에 현재 시간을 붙여 캐시 버스팅(Cache Busting)
+        // API에서 이미 버전 파라미터가 있을 수 있으므로 추가로 타임스탬프 추가
+        const separator = rawUrl.includes('?') ? '&' : '?'
+        imageUrl = `${rawUrl}${separator}t=${new Date().getTime()}`
+        console.log(`[DEBUG] Final image URL with Cache Bust:`, imageUrl)
       }
     } else {
       console.error(`[DEBUG] Cover image API failed with status: ${response.status}`)
@@ -70,6 +74,7 @@ export async function generateMetadata(): Promise<Metadata> {
           width: 1200,
           height: 630,
           alt: "현도찬 ♥ 김은진 결혼식 청첩장",
+          secureUrl: imageUrl, // secure_url도 여기에 포함
         },
       ],
       locale: "ko_KR",

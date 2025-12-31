@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readFile, access } from 'fs/promises'
-import { join } from 'path'
+import { join, resolve } from 'path'
 
 export async function GET(
   request: NextRequest,
@@ -27,8 +27,8 @@ export async function GET(
     const filePath = join(uploadsDir, ...sanitizedPath)
     
     // 보안: uploadsDir 밖으로 나가는 경로 차단
-    const resolvedPath = require('path').resolve(filePath)
-    const resolvedUploadsDir = require('path').resolve(uploadsDir)
+    const resolvedPath = resolve(filePath)
+    const resolvedUploadsDir = resolve(uploadsDir)
     if (!resolvedPath.startsWith(resolvedUploadsDir)) {
       return new NextResponse('Invalid path', { status: 403 })
     }

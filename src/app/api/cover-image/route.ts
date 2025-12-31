@@ -9,20 +9,21 @@ export async function GET() {
   try {
     const coverData = await getCoverImageData()
     
-    if (!coverData) {
-      return NextResponse.json<ApiResponse<null>>({
-        success: false,
-        error: 'No cover image found',
-      }, { status: 404 })
+    // DB에 이미지가 없어도 fallback 이미지를 반환 (404 방지)
+    let imageUrl: string
+    if (coverData) {
+      // 추가 타임스탬프를 붙여 더 강력한 캐시 버스팅
+      const separator = coverData.url.includes('?') ? '&' : '?'
+      imageUrl = `${coverData.url}${separator}t=${Date.now()}`
+    } else {
+      // Fallback 이미지 사용
+      imageUrl = `/uploads/images/main_cover.jpg?t=${Date.now()}`
+      console.log('[DEBUG] cover-image API: No cover image in DB, using fallback')
     }
-
-    // 추가 타임스탬프를 붙여 더 강력한 캐시 버스팅
-    const separator = coverData.url.includes('?') ? '&' : '?'
-    const urlWithTimestamp = `${coverData.url}${separator}t=${Date.now()}`
 
     return NextResponse.json<ApiResponse<{ url: string }>>({
       success: true,
-      data: { url: urlWithTimestamp },
+      data: { url: imageUrl },
     })
   } catch (error) {
     console.error('[DEBUG] cover-image API: Error details:', {
@@ -30,12 +31,10 @@ export async function GET() {
       stack: error instanceof Error ? error.stack : undefined,
       error: error
     })
-    return NextResponse.json<ApiResponse<null>>(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Failed to fetch cover image',
-      },
-      { status: 500 }
-    )
+    // 에러 발생 시에도 fallback 이미지 반환 (404 방지)
+    return NextResponse.json<ApiResponse<{ url: string }>>({
+      success: true,
+      data: { url: `/uploads/images/main_cover.jpg?t=${Date.now()}` },
+    })
   }
 } 

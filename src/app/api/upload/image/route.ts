@@ -54,6 +54,17 @@ export async function POST(request: NextRequest) {
     // 이제 fileData는 File | Blob 타입임이 보장됨
     const filename = (fileData as { name?: string }).name || 'uploaded.jpg'
     
+    // 보안: 파일명 검증 (경로 traversal 방지)
+    if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
+      return NextResponse.json<ApiResponse<null>>(
+        {
+          success: false,
+          error: 'Invalid filename',
+        },
+        { status: 400 }
+      )
+    }
+    
     console.log('🔍 [DEBUG] Upload info:', {
       filename,
       size: fileData.size,
@@ -97,10 +108,23 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 보안: 파일명 검증 (경로 traversal 방지)
+    if (filename.includes('..') || filename.includes('/') || filename.includes('\\')) {
+      return NextResponse.json<ApiResponse<null>>(
+        {
+          success: false,
+          error: 'Invalid filename',
+        },
+        { status: 400 }
+      )
+    }
+
     // 파일명 생성 (targetId가 있으면 사용, 없으면 timestamp)
+    // 보안: targetId도 sanitize
     const timestamp = Date.now()
     const fileExtension = '.jpg' // 항상 JPEG로 변환하여 저장
-    const fileName = targetId ? `${targetId}${fileExtension}` : `${timestamp}${fileExtension}`
+    const sanitizedTargetId = targetId ? targetId.replace(/[^a-zA-Z0-9._-]/g, '_') : null
+    const fileName = sanitizedTargetId ? `${sanitizedTargetId}${fileExtension}` : `${timestamp}${fileExtension}`
     
     // images 폴더 구조로 변경 (환경변수 사용)
     const uploadsDir = process.env.UPLOAD_DIR || '/app/public/uploads'

@@ -41,11 +41,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 사용자명으로 admin 조회
-    const [rows] = await pool.query(
+    // 사용자명으로 admin 조회 (타임아웃 설정)
+    const queryPromise = pool.query(
       'SELECT id, username, password FROM admin WHERE username = ?',
       [username]
     )
+    
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('Database query timeout')), 10000)
+    })
+    
+    const [rows] = await Promise.race([queryPromise, timeoutPromise]) as [unknown[], unknown]
     
     const adminRows = rows as { id: number; username: string; password: string }[]
     
@@ -59,10 +65,18 @@ export async function POST(request: NextRequest) {
     const admin = adminRows[0]
     
     // 저장된 해시된 비밀번호를 검증
-    if (!verifyPassword(password, admin.password)) {
+    try {
+      if (!verifyPassword(password, admin.password)) {
+        return NextResponse.json(
+          { success: false, message: '잘못된 사용자명 또는 비밀번호입니다.' },
+          { status: 401 }
+        )
+      }
+    } catch (verifyError) {
+      console.error('Password verification error:', verifyError)
       return NextResponse.json(
-        { success: false, message: '잘못된 사용자명 또는 비밀번호입니다.' },
-        { status: 401 }
+        { success: false, message: '비밀번호 검증 중 오류가 발생했습니다.' },
+        { status: 500 }
       )
     }
 
@@ -102,8 +116,20 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Login error:', error)
+    // 에러 상세 정보 로깅 (개발 환경에서만)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+        name: error instanceof Error ? error.name : undefined
+      })
+    }
     const errorResponse = NextResponse.json(
-      { success: false, message: '로그인 처리 중 오류가 발생했습니다.' },
+      { 
+        success: false, 
+        message: '로그인 처리 중 오류가 발생했습니다.',
+        ...(process.env.NODE_ENV === 'development' && error instanceof Error ? { error: error.message } : {})
+      },
       { status: 500 }
     )
     // 에러 응답에도 CORS 헤더 추가

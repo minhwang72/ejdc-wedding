@@ -27,33 +27,41 @@ export async function GET() {
     // 이미지 업데이트 시간을 기반으로 버전 생성 (카카오톡 캐시 무효화)
     // updated_at이 없으면 created_at 사용, 둘 다 없으면 현재 시간 사용
     let timestamp: number
-    if (result[0].updated_at) {
-      timestamp = result[0].updated_at instanceof Date 
-        ? result[0].updated_at.getTime() 
-        : new Date(result[0].updated_at).getTime()
-    } else if (result[0].created_at) {
-      timestamp = result[0].created_at instanceof Date 
-        ? result[0].created_at.getTime() 
-        : new Date(result[0].created_at).getTime()
-    } else {
+    try {
+      if (result[0].updated_at) {
+        timestamp = result[0].updated_at instanceof Date 
+          ? result[0].updated_at.getTime() 
+          : new Date(result[0].updated_at).getTime()
+      } else if (result[0].created_at) {
+        timestamp = result[0].created_at instanceof Date 
+          ? result[0].created_at.getTime() 
+          : new Date(result[0].created_at).getTime()
+      } else {
+        timestamp = Date.now()
+      }
+    } catch (error) {
+      // 타임스탬프 생성 실패 시 현재 시간 사용
+      console.error('Error generating timestamp from DB:', error)
       timestamp = Date.now()
     }
     
     // 이미지 파일의 실제 수정 시간도 확인 (더 정확한 버전 관리)
+    // 파일 접근 실패 시에도 API는 정상 동작해야 함
     try {
       const { stat } = await import('fs/promises')
       const { join } = await import('path')
-      const uploadsDir = process.env.UPLOAD_DIR || '/app/public/uploads'
+      const uploadsDir = process.env.UPLOAD_DIR || process.cwd() + '/public/uploads'
       const filePath = join(uploadsDir, result[0].filename)
       const fileStat = await stat(filePath)
       // 파일 수정 시간이 더 최신이면 그것을 사용
       if (fileStat.mtime.getTime() > timestamp) {
         timestamp = fileStat.mtime.getTime()
       }
-    } catch (fileError) {
-      // 파일이 없거나 접근할 수 없으면 DB 시간 사용
-      console.log('Could not read file stat, using DB timestamp:', fileError)
-    }
+      } catch {
+        // 파일이 없거나 접근할 수 없으면 DB 시간 사용 (정상 동작)
+        // 에러를 로그로만 남기고 API는 계속 진행
+        console.log('Could not read file stat, using DB timestamp')
+      }
     
     const version = timestamp
 

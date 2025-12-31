@@ -116,19 +116,22 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Login error:', error)
-    // 에러 상세 정보 로깅 (개발 환경에서만)
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error details:', {
-        message: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined,
-        name: error instanceof Error ? error.name : undefined
-      })
+    // 에러 상세 정보 로깅 (항상 로깅)
+    const errorDetails = {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      code: error instanceof Error && 'code' in error ? (error as any).code : undefined,
+      errno: error instanceof Error && 'errno' in error ? (error as any).errno : undefined,
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
     }
+    console.error('Error details:', errorDetails)
+    
     const errorResponse = NextResponse.json(
       { 
         success: false, 
         message: '로그인 처리 중 오류가 발생했습니다.',
-        ...(process.env.NODE_ENV === 'development' && error instanceof Error ? { error: error.message } : {})
+        error: errorDetails.message,
+        ...(errorDetails.code ? { errorCode: errorDetails.code } : {})
       },
       { status: 500 }
     )

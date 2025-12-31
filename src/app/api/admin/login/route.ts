@@ -117,10 +117,15 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Login error:', error)
     // 에러 상세 정보 로깅 (항상 로깅)
+    interface ErrorWithCode extends Error {
+      code?: string
+      errno?: number
+    }
+    const errorWithCode = error as ErrorWithCode
     const errorDetails = {
       message: error instanceof Error ? error.message : 'Unknown error',
-      code: error instanceof Error && 'code' in error ? (error as any).code : undefined,
-      errno: error instanceof Error && 'errno' in error ? (error as any).errno : undefined,
+      code: errorWithCode.code,
+      errno: errorWithCode.errno,
       stack: error instanceof Error ? error.stack : undefined,
       name: error instanceof Error ? error.name : undefined
     }

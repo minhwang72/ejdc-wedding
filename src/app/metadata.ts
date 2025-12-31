@@ -36,6 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
       
       if (data.success && data.data?.url) {
         // URL이 상대 경로인 경우 절대 경로로 변환
+        // 이미지 URL에 이미 버전 쿼리 파라미터가 포함되어 있을 수 있음
         imageUrl = data.data.url.startsWith('http') 
           ? data.data.url
           : `https://ejdc.eungming.com${data.data.url}`

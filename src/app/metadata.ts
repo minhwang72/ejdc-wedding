@@ -1,24 +1,20 @@
 import { Metadata } from 'next'
-import type { Gallery } from '@/types'
 
 export async function generateMetadata(): Promise<Metadata> {
   // 기본 이미지를 실제 존재하는 메인 이미지로 설정
   let imageUrl = 'https://ejdc.eungming.com/uploads/images/main_cover.jpg'
   
   try {
-    // 캐시 무효화를 위한 타임스탬프 추가
-    const timestamp = Date.now()
-    
     // 서버 사이드에서는 내부 API 호출 사용 (SSL 인증서 문제 회피)
     const baseUrl = process.env.INTERNAL_API_URL || 
       (process.env.NODE_ENV === 'production' 
         ? 'http://127.0.0.1:1140'  // Docker 내부에서는 HTTP 사용 (IPv4)
         : 'http://127.0.0.1:3000')  // 개발 환경 (IPv4)
       
-    console.log(`[DEBUG] Fetching gallery data from: ${baseUrl}/api/gallery`)
+    console.log(`[DEBUG] Fetching cover image from: ${baseUrl}/api/cover-image`)
     
     // 타임아웃 설정 (10초)
-    const fetchPromise = fetch(`${baseUrl}/api/gallery?t=${timestamp}`, {
+    const fetchPromise = fetch(`${baseUrl}/api/cover-image`, {
       cache: 'no-store',
       next: { revalidate: 0 }, // ISR 캐시도 무효화
       headers: {
@@ -32,29 +28,24 @@ export async function generateMetadata(): Promise<Metadata> {
     
     const response = await Promise.race([fetchPromise, timeoutPromise])
     
-    console.log(`[DEBUG]  Gallery API response status: ${response.status}`)
+    console.log(`[DEBUG] Cover image API response status: ${response.status}`)
     
     if (response.ok) {
       const data = await response.json()
-      console.log(`[DEBUG] Gallery API response data:`, data)
+      console.log(`[DEBUG] Cover image API response data:`, data)
       
-      if (data.success) {
-        const mainImage = data.data.find((img: Gallery) => img.image_type === 'main')
-        console.log(`[DEBUG] Found main image:`, mainImage)
-        
-        if (mainImage?.url) {
-          // URL이 상대 경로인 경우 절대 경로로 변환하고 타임스탬프 추가
-          imageUrl = mainImage.url.startsWith('http') 
-            ? `${mainImage.url}?v=${timestamp}`
-            : `https://ejdc.eungming.com${mainImage.url}?v=${timestamp}`
-          console.log(`[DEBUG] Final image URL:`, imageUrl)
-        }
+      if (data.success && data.data?.url) {
+        // URL이 상대 경로인 경우 절대 경로로 변환
+        imageUrl = data.data.url.startsWith('http') 
+          ? data.data.url
+          : `https://ejdc.eungming.com${data.data.url}`
+        console.log(`[DEBUG] Final image URL:`, imageUrl)
       }
     } else {
-      console.error(`[DEBUG] Gallery API failed with status: ${response.status}`)
+      console.error(`[DEBUG] Cover image API failed with status: ${response.status}`)
     }
   } catch (error) {
-    console.error('Error fetching main image for metadata:', error)
+    console.error('Error fetching cover image for metadata:', error)
     // 오류 발생 시 기본 메인 이미지 사용
     console.log(`[DEBUG] Using fallback image: ${imageUrl}`)
   }

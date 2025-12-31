@@ -6,7 +6,8 @@
 ## 자동 해결 (이미 구현됨)
 - 이미지 URL에 버전 쿼리 파라미터가 자동으로 추가됩니다
 - 이미지가 업데이트되면 `updated_at` 기반으로 버전이 변경되어 카카오톡이 새로운 이미지로 인식합니다
-- 예: `https://ejdc.eungming.com/uploads/images/main_cover.jpg?v=1735632000000`
+- 매 요청마다 타임스탬프가 추가되어 강력한 캐시 버스팅이 적용됩니다
+- 예: `https://ejdc.eungming.com/uploads/images/main_cover.jpg?v=1735632000000&t=1735632000000`
 
 ## 수동 캐시 초기화 (필요시)
 

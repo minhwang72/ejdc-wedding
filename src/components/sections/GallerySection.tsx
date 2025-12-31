@@ -21,6 +21,7 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
   const thumbnailScrollRef = useRef<HTMLDivElement>(null)
+  const isInitialMount = useRef(true)
 
   // 스크롤 애니메이션 훅들
   const titleAnimation = useScrollAnimation({ threshold: 0.4, animationDelay: 200 })
@@ -97,15 +98,46 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
     }
   }
 
-  // 현재 이미지 변경 시 썸네일 스크롤 조정
+  // 현재 이미지 변경 시 썸네일 스크롤 조정 (초기 로드 시 제외)
   useEffect(() => {
+    // 초기 마운트 시에는 스크롤 조정하지 않음
+    if (isInitialMount.current) {
+      isInitialMount.current = false
+      return
+    }
+
     if (thumbnailScrollRef.current) {
-      const thumbnailElement = thumbnailScrollRef.current.children[currentImageIndex] as HTMLElement
-      if (thumbnailElement) {
-        thumbnailElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'center'
+      // 현재 선택된 이미지는 썸네일에서 제외되므로, 다음 썸네일을 찾아서 스크롤
+      const thumbnails = Array.from(thumbnailScrollRef.current.children) as HTMLElement[]
+      
+      // 현재 인덱스보다 큰 썸네일 중 가장 가까운 것 찾기
+      let targetThumbnail: HTMLElement | null = null
+      
+      for (let i = 0; i < thumbnails.length; i++) {
+        const thumbnail = thumbnails[i]
+        const dataIndex = parseInt(thumbnail.getAttribute('data-index') || '0')
+        
+        if (dataIndex > currentImageIndex) {
+          targetThumbnail = thumbnail
+          break
+        }
+      }
+      
+      // 다음 썸네일이 없으면 마지막 썸네일 사용
+      if (!targetThumbnail && thumbnails.length > 0) {
+        targetThumbnail = thumbnails[thumbnails.length - 1] as HTMLElement
+      }
+      
+      if (targetThumbnail) {
+        // scrollIntoView 대신 scrollLeft를 직접 조정하여 페이지 스크롤에 영향 없도록
+        const container = thumbnailScrollRef.current
+        const thumbnailRect = targetThumbnail.getBoundingClientRect()
+        const containerRect = container.getBoundingClientRect()
+        const scrollLeft = container.scrollLeft + (thumbnailRect.left - containerRect.left) - (containerRect.width / 2) + (thumbnailRect.width / 2)
+        
+        container.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth'
         })
       }
     }
@@ -134,7 +166,7 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
           className={`mb-6 md:mb-8 px-8 md:px-12 transition-all duration-800 ${mainImageAnimation.animationClass}`}
         >
           <div 
-            className="group relative w-full max-w-xs mx-auto aspect-[2/3] bg-gray-50 rounded-lg overflow-hidden"
+            className="group relative w-full max-w-xs mx-auto aspect-[2/3] bg-transparent rounded-lg overflow-hidden"
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -162,7 +194,7 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
                   <img
                     src={displayImages[currentImageIndex].url}
                     alt={`Gallery ${currentImageIndex + 1}`}
-                    className="w-full h-full object-contain touch-none"
+                    className="w-full h-full object-cover touch-none"
                     draggable={false}
                     onError={() => handleImageError(displayImages[currentImageIndex].id)}
                   />
@@ -218,6 +250,7 @@ export default function GallerySection({ gallery }: GallerySectionProps) {
                 return (
                   <button
                     key={index}
+                    data-index={index}
                     onClick={() => goToImage(index)}
                     className="flex-shrink-0 w-16 aspect-[2/3] md:w-20 md:aspect-[2/3] rounded-lg overflow-hidden transition-all opacity-60 hover:opacity-80"
                     aria-label={`이미지 ${index + 1} 선택`}

@@ -16,15 +16,15 @@ const CACHE_DURATION = 5 * 60 * 1000 // 5분
 const fetchWithCache = async (url: string, forceRefresh = false) => {
   const now = Date.now()
   const cached = apiCache.get(url)
-  
+
   if (!forceRefresh && cached && now - cached.timestamp < CACHE_DURATION) {
     return cached.data
   }
-  
+
   // 타임아웃 설정 (10초)
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 10000)
-  
+
   try {
     // Cache busting을 위한 timestamp 추가
     const timestamp = Date.now()
@@ -37,11 +37,11 @@ const fetchWithCache = async (url: string, forceRefresh = false) => {
       }
     })
     clearTimeout(timeoutId)
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`)
     }
-    
+
     const data = await response.json()
     apiCache.set(url, { data, timestamp: now })
     return data
@@ -64,17 +64,17 @@ const GalleryLoading = () => (
     <div className="max-w-xl mx-auto text-center w-full px-6 md:px-8">
       {/* 제목 스켈레톤 */}
       <div className="h-10 bg-gray-200 rounded animate-pulse mb-12 md:mb-16 w-40 mx-auto"></div>
-      
+
       {/* 상단 가로선 */}
       <div className="w-full h-px bg-gray-200 mb-6 md:mb-8"></div>
-      
+
       {/* 갤러리 그리드 스켈레톤 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 mb-6 md:mb-8">
         {[...Array(6)].map((_, i) => (
           <div key={i} className="aspect-square bg-gray-200 animate-pulse rounded"></div>
         ))}
       </div>
-      
+
       {/* 하단 가로선 */}
       <div className="w-full h-px bg-gray-200"></div>
     </div>
@@ -85,7 +85,7 @@ export default function LazyGallerySection() {
   const [gallery, setGallery] = useState<Gallery[]>([])
   const [loading, setLoading] = useState(false)
   const [hasLoaded, setHasLoaded] = useState(false)
-  
+
   const { ref, shouldLoad } = useIntersectionObserver({
     rootMargin: '200px',
     threshold: 0.1,
@@ -96,7 +96,7 @@ export default function LazyGallerySection() {
     try {
       setLoading(true)
       const galleryData = await fetchWithCache('/api/gallery', forceRefresh)
-      
+
       if (galleryData && typeof galleryData === 'object' && 'success' in galleryData && galleryData.success) {
         setGallery((galleryData as { data: Gallery[] }).data || [])
       }
@@ -110,19 +110,22 @@ export default function LazyGallerySection() {
   }, [])
 
   useEffect(() => {
-    if (shouldLoad && !hasLoaded) {
+    // 마운트 시 데이터 바로 요청 (Pre-fetching)
+    // shouldLoad(스크롤 도달)와 관계없이 데이터를 미리 받아둠
+    if (!hasLoaded) {
       fetchGallery().then(() => setHasLoaded(true))
     }
-  }, [shouldLoad, hasLoaded, fetchGallery])
+  }, [fetchGallery, hasLoaded])
 
   // 자동 갱신 제거: 페이지 로드/새로고침 시 자동으로 API 호출되므로 불필요
 
   return (
     <div ref={ref}>
-      {loading && !hasLoaded ? (
-        <GalleryLoading />
-      ) : (
+      {/* shouldLoad가 true이고(보이고), 로딩이 끝났고(데이터 있음) 나서야 렌더링 */}
+      {shouldLoad && !loading && hasLoaded ? (
         <GallerySection gallery={gallery} />
+      ) : (
+        <GalleryLoading />
       )}
     </div>
   )

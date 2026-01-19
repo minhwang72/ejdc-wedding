@@ -16,19 +16,19 @@ const CACHE_DURATION = 5 * 60 * 1000 // 5분
 const fetchWithCache = async (url: string, forceRefresh = false) => {
   const now = Date.now()
   const cached = apiCache.get(url)
-  
+
   // forceRefresh가 true이거나 캐시가 만료된 경우 새로 요청
   if (!forceRefresh && cached && now - cached.timestamp < CACHE_DURATION) {
     console.log('🔍 [DEBUG] Using cached data for:', url)
     return cached.data
   }
-  
+
   console.log('🔍 [DEBUG] Fetching fresh data for:', url)
-  
+
   // 타임아웃 설정 (10초)
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 10000)
-  
+
   try {
     const response = await fetch(url, {
       signal: controller.signal,
@@ -39,13 +39,13 @@ const fetchWithCache = async (url: string, forceRefresh = false) => {
       }
     })
     clearTimeout(timeoutId)
-    
+
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`)
     }
-    
+
     const data = await response.json()
-    
+
     // 성공 시에만 캐시에 저장
     apiCache.set(url, { data, timestamp: now })
     return data
@@ -95,7 +95,7 @@ export default function LazyGuestbookSection() {
   const [guestbook, setGuestbook] = useState<Guestbook[]>([])
   const [loading, setLoading] = useState(false)
   const [hasLoaded, setHasLoaded] = useState(false)
-  
+
   const { ref, shouldLoad } = useIntersectionObserver({
     rootMargin: '200px',
     threshold: 0.1,
@@ -109,7 +109,7 @@ export default function LazyGuestbookSection() {
       console.log('🔍 [DEBUG] Forcing guestbook refresh')
       // 강제로 최신 데이터 가져오기 (캐시 무시)
       const guestbookData = await fetchWithCache('/api/guestbook', true)
-      
+
       if (guestbookData && typeof guestbookData === 'object' && 'success' in guestbookData && guestbookData.success) {
         setGuestbook((guestbookData as { data: Guestbook[] }).data || [])
         console.log('✅ [DEBUG] Guestbook updated with fresh data')
@@ -123,34 +123,37 @@ export default function LazyGuestbookSection() {
   }, [])
 
   useEffect(() => {
-    if (shouldLoad && !hasLoaded) {
-      const fetchInitialGuestbook = async () => {
-        try {
-          setLoading(true)
-          const guestbookData = await fetchWithCache('/api/guestbook')
-          
-          if (guestbookData && typeof guestbookData === 'object' && 'success' in guestbookData && guestbookData.success) {
-            setGuestbook((guestbookData as { data: Guestbook[] }).data || [])
-          }
-        } catch (error) {
-          console.error('Error fetching guestbook:', error)
-          setGuestbook([])
-        } finally {
-          setLoading(false)
-          setHasLoaded(true)
-        }
-      }
+    // 마운트 시 데이터 바로 요청 (Pre-fetching)
+    // shouldLoad(스크롤 도달)와 관계없이 데이터를 미리 받아둠
+    const fetchInitialGuestbook = async () => {
+      try {
+        setLoading(true)
+        const guestbookData = await fetchWithCache('/api/guestbook')
 
+        if (guestbookData && typeof guestbookData === 'object' && 'success' in guestbookData && guestbookData.success) {
+          setGuestbook((guestbookData as { data: Guestbook[] }).data || [])
+        }
+      } catch (error) {
+        console.error('Error fetching guestbook:', error)
+        setGuestbook([])
+      } finally {
+        setLoading(false)
+        setHasLoaded(true)
+      }
+    }
+
+    if (!hasLoaded) {
       fetchInitialGuestbook()
     }
-  }, [shouldLoad, hasLoaded])
+  }, [hasLoaded])
 
   return (
     <div ref={ref}>
-      {loading && !hasLoaded ? (
-        <GuestbookLoading />
-      ) : (
+      {/* shouldLoad가 true이고(보이고), 로딩이 끝났고(데이터 있음) 나서야 렌더링 */}
+      {shouldLoad && !loading && hasLoaded ? (
         <GuestbookSection guestbook={guestbook} onGuestbookUpdate={fetchGuestbook} />
+      ) : (
+        <GuestbookLoading />
       )}
     </div>
   )
